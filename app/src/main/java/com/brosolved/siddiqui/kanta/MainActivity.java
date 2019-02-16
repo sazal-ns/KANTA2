@@ -2,6 +2,12 @@ package com.brosolved.siddiqui.kanta;
 
 import android.os.Bundle;
 
+import com.brosolved.siddiqui.kanta.adapter.CategoryAdapter;
+import com.brosolved.siddiqui.kanta.models.Categories;
+import com.brosolved.siddiqui.kanta.models.Category;
+import com.brosolved.siddiqui.kanta.remote.API;
+import com.brosolved.siddiqui.kanta.remote.TheGateway;
+import com.brosolved.siddiqui.kanta.utils.CommonTask;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -14,12 +20,25 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private static final String TAG = "MainActivity";
+
+    private List<Category> categories;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +64,39 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        fetchData();
+    }
+
+    private void initCategories(){
+        LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+
+        RecyclerView recycler = findViewById(R.id.recyclerViewCategories);
+        recycler.setLayoutManager(manager);
+
+        CategoryAdapter adapter = new CategoryAdapter(this, categories);
+        recycler.setAdapter(adapter);
+    }
+
+    private void fetchData(){
+        API api = TheGateway.path();
+        categories = new ArrayList<>();
+
+        api.getAllCategoriesWithProducts().enqueue(new Callback<Categories>() {
+            @Override
+            public void onResponse(Call<Categories> call, Response<Categories> response) {
+                if (response.isSuccessful() && response.code() ==200){
+                    categories.addAll(response.body().getData());
+                    initCategories();
+                }else CommonTask.showTost(MainActivity.this, "Something Wrong !!!");
+            }
+
+            @Override
+            public void onFailure(Call<Categories> call, Throwable t) {
+                t.printStackTrace();
+                CommonTask.showTost(MainActivity.this, "Can't reach to server");
+            }
+        });
     }
 
     @Override
