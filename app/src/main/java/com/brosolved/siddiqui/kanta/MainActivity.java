@@ -88,13 +88,13 @@ public class MainActivity extends AppCompatActivity
                 if (response.isSuccessful() && response.code() ==200){
                     categories.addAll(response.body().getData());
                     initCategories();
-                }else CommonTask.showTost(MainActivity.this, "Something Wrong !!!");
+                }else CommonTask.showToast(MainActivity.this, "Something Wrong !!!");
             }
 
             @Override
             public void onFailure(Call<Categories> call, Throwable t) {
                 t.printStackTrace();
-                CommonTask.showTost(MainActivity.this, "Can't reach to server");
+                CommonTask.showToast(MainActivity.this, "Can't reach to server");
             }
         });
     }
