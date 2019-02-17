@@ -25,5 +25,6 @@ before_script:
    - cp ./licenses/* "$ANDROID_HOME/licenses/"
 before_install:
     - yes | sdkmanager "platforms;android-28"
+    - chmod +x gradlew
 script:
     - ./gradlew build check
