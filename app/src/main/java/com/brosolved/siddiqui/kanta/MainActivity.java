@@ -1,16 +1,22 @@
 package com.brosolved.siddiqui.kanta;
 
+import android.content.res.Resources;
+import android.graphics.Rect;
 import android.os.Bundle;
 
 import com.brosolved.siddiqui.kanta.adapter.CategoryAdapter;
+import com.brosolved.siddiqui.kanta.adapter.ProductsAdapter;
 import com.brosolved.siddiqui.kanta.models.Categories;
 import com.brosolved.siddiqui.kanta.models.Category;
+import com.brosolved.siddiqui.kanta.models.Product;
+import com.brosolved.siddiqui.kanta.models.Products;
 import com.brosolved.siddiqui.kanta.remote.API;
 import com.brosolved.siddiqui.kanta.remote.TheGateway;
 import com.brosolved.siddiqui.kanta.utils.CommonTask;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import android.util.TypedValue;
 import android.view.View;
 
 import com.google.android.material.navigation.NavigationView;
@@ -20,6 +26,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
@@ -38,6 +46,7 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = "MainActivity";
 
     private List<Category> categories;
+    private List<Product> products;
 
 
     @Override
@@ -78,9 +87,18 @@ public class MainActivity extends AppCompatActivity
         recycler.setAdapter(adapter);
     }
 
+    private void initProducts(){
+        RecyclerView productRecyclerView = findViewById(R.id.recyclerViewProduct);
+        productRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        productRecyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
+        productRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        productRecyclerView.setAdapter(new ProductsAdapter(this, products));
+    }
+
     private void fetchData(){
         API api = TheGateway.path();
         categories = new ArrayList<>();
+        products = new ArrayList<>();
 
         api.getAllCategoriesWithProducts().enqueue(new Callback<Categories>() {
             @Override
@@ -93,6 +111,22 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onFailure(Call<Categories> call, Throwable t) {
+                t.printStackTrace();
+                CommonTask.showToast(MainActivity.this, "Can't reach to server");
+            }
+        });
+
+        api.getAllProducts().enqueue(new Callback<Products>() {
+            @Override
+            public void onResponse(Call<Products> call, Response<Products> response) {
+                if (response.isSuccessful() && response.code() ==200){
+                    products.addAll(response.body().getData());
+                    initProducts();
+                }else CommonTask.showToast(MainActivity.this, "Something Wrong !!!");
+            }
+
+            @Override
+            public void onFailure(Call<Products> call, Throwable t) {
                 t.printStackTrace();
                 CommonTask.showToast(MainActivity.this, "Can't reach to server");
             }
@@ -154,5 +188,48 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
+
+        private int spanCount;
+        private int spacing;
+        private boolean includeEdge;
+
+        public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
+            this.spanCount = spanCount;
+            this.spacing = spacing;
+            this.includeEdge = includeEdge;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            int position = parent.getChildAdapterPosition(view); // item position
+            int column = position % spanCount; // item column
+
+            if (includeEdge) {
+                outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
+                outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
+
+                if (position < spanCount) { // top edge
+                    outRect.top = spacing;
+                }
+                outRect.bottom = spacing; // item bottom
+            } else {
+                outRect.left = column * spacing / spanCount; // column * ((1f / spanCount) * spacing)
+                outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + 1) * ((1f /    spanCount) * spacing)
+                if (position >= spanCount) {
+                    outRect.top = spacing; // item top
+                }
+            }
+        }
+    }
+
+    /**
+     * Converting dp to pixel
+     */
+    private int dpToPx(int dp) {
+        Resources r = getResources();
+        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
     }
 }

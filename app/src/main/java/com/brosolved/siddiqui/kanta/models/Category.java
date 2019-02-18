@@ -23,7 +23,7 @@ public class Category {
 	private String title;
 
 	@SerializedName("products")
-	private List<Products> products;
+	private List<Product> products;
 
 	public void setUpdatedAt(String updatedAt){
 		this.updatedAt = updatedAt;
@@ -65,11 +65,11 @@ public class Category {
 		return title;
 	}
 
-	public void setProducts(List<Products> products){
+	public void setProducts(List<Product> products){
 		this.products = products;
 	}
 
-	public List<Products> getProducts(){
+	public List<Product> getProducts(){
 		return products;
 	}
 

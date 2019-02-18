@@ -1,6 +1,7 @@
 package com.brosolved.siddiqui.kanta.remote;
 
 import com.brosolved.siddiqui.kanta.models.Categories;
+import com.brosolved.siddiqui.kanta.models.Products;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -14,5 +15,8 @@ public interface API {
 
     @GET("category")
     Call<Categories> getAllCategoriesWithProducts();
+
+    @GET("product")
+    Call<Products> getAllProducts();
 
 }
