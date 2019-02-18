@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity
     private void initProducts(){
         RecyclerView productRecyclerView = findViewById(R.id.recyclerViewProduct);
         productRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        productRecyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
+        productRecyclerView.addItemDecoration(new GridSpacingItemDecoration(1, dpToPx(5), true));
         productRecyclerView.setItemAnimator(new DefaultItemAnimator());
         productRecyclerView.setAdapter(new ProductsAdapter(this, products));
     }

@@ -49,7 +49,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
             e.printStackTrace();
         }
         holder.name.setText(products.get(position).getName());
-        holder.price.setText(products.get(position).getPrice());
+        holder.price.setText(products.get(position).getPrice()+" BDT");
 
 
 
