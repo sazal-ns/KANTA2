@@ -1,9 +1,11 @@
 package com.brosolved.siddiqui.kanta;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import com.brosolved.siddiqui.kanta.adapter.CategoryAdapter;
 import com.brosolved.siddiqui.kanta.adapter.ProductsAdapter;
@@ -21,6 +23,7 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -30,6 +33,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -42,6 +46,13 @@ public class MainActivity extends AppCompatActivity
     private List<Category> categories;
     private List<Product> products;
 
+    private CategoryAdapter categoryAdapter;
+    private ProductsAdapter productsAdapter;
+
+    private ProgressBar progressBar;
+    private RecyclerView productRecyclerView;
+    private SwipeRefreshLayout refreshLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +60,10 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        progressBar = findViewById(R.id.progressBar);
+        productRecyclerView = findViewById(R.id.recyclerViewProduct);
+        refreshLayout = findViewById(R.id.refresh);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -69,23 +84,31 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         fetchData();
+
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fetchData();
+            }
+        });
     }
 
     private void initCategories(){
         LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-
         RecyclerView recycler = findViewById(R.id.recyclerViewCategories);
         recycler.setLayoutManager(manager);
-
-        CategoryAdapter adapter = new CategoryAdapter(this, categories);
-        recycler.setAdapter(adapter);
+        categoryAdapter = new CategoryAdapter(this, categories);
+        recycler.setAdapter(categoryAdapter);
     }
 
     private void initProducts(){
-        RecyclerView productRecyclerView = findViewById(R.id.recyclerViewProduct);
-        productRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+            productRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        else productRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
         productRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        productRecyclerView.setAdapter(new ProductsAdapter(this, products));
+        productsAdapter = new ProductsAdapter(this, products);
+        productRecyclerView.setAdapter(productsAdapter);
     }
 
     private void fetchData(){
@@ -100,6 +123,8 @@ public class MainActivity extends AppCompatActivity
                     categories.addAll(response.body().getData());
                     initCategories();
                 }else CommonTask.showToast(MainActivity.this, "Something Wrong !!!");
+
+                categoryAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -107,6 +132,7 @@ public class MainActivity extends AppCompatActivity
                 t.printStackTrace();
                 CommonTask.showToast(MainActivity.this, "Can't reach to server");
             }
+
         });
 
         api.getAllProducts().enqueue(new Callback<Products>() {
@@ -115,15 +141,34 @@ public class MainActivity extends AppCompatActivity
                 if (response.isSuccessful() && response.code() ==200){
                     products.addAll(response.body().getData());
                     initProducts();
-                }else CommonTask.showToast(MainActivity.this, "Something Wrong !!!");
+                    progressBar.setVisibility(View.GONE);
+                }else {CommonTask.showToast(MainActivity.this, "Something Wrong !!!");
+                    progressBar.setVisibility(View.GONE);
+                }
+
+                refreshLayout.setRefreshing(false);
+                productsAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onFailure(Call<Products> call, Throwable t) {
                 t.printStackTrace();
                 CommonTask.showToast(MainActivity.this, "Can't reach to server");
+                progressBar.setVisibility(View.GONE);
+                refreshLayout.setRefreshing(false);
             }
         });
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
+            productRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
+        }else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+            productRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        }
     }
 
     @Override
