@@ -13,4 +13,13 @@ public class CommonTask {
     public static void showToast(Context context, String message){
         Toast.makeText(context, message, Toast.LENGTH_LONG).show();
     }
+
+    public static boolean checkInput(String input, int length){
+        boolean isOk = true;
+
+        if (input.isEmpty() || input.length() != length)
+            isOk = false;
+
+        return isOk;
+    }
 }

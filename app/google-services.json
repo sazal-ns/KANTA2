@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "906990436992",
+    "firebase_url": "https://kanta-220608.firebaseio.com",
+    "project_id": "kanta-220608",
+    "storage_bucket": "kanta-220608.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:906990436992:android:0ffa3cfc471028a1",
+        "android_client_info": {
+          "package_name": "com.brosolved.siddiqui.kanta"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "906990436992-h1lojqkhpa8q5j3v31vjme08ebs27ap6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.brosolved.siddiqui.kanta",
+            "certificate_hash": "d6241ff646e7fe2732d31b8643281944787b3156"
+          }
+        },
+        {
+          "client_id": "906990436992-ng5bmd47fh39alms7onh212rs9ub8av2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXoGXxGwUpWGSBxcAZOwGpk3vrzd_VfHg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "906990436992-ng5bmd47fh39alms7onh212rs9ub8av2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

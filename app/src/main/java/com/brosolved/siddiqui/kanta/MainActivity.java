@@ -5,8 +5,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
+import android.widget.TextView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.brosolved.siddiqui.kanta.adapter.CategoryAdapter;
 import com.brosolved.siddiqui.kanta.adapter.ProductsAdapter;
 import com.brosolved.siddiqui.kanta.models.Categories;
@@ -49,23 +50,25 @@ public class MainActivity extends AppCompatActivity
     private CategoryAdapter categoryAdapter;
     private ProductsAdapter productsAdapter;
 
-    private ProgressBar progressBar;
+    private LottieAnimationView lottieAnimationView;
     private RecyclerView productRecyclerView;
     private SwipeRefreshLayout refreshLayout;
+    private TextView textView;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        progressBar = findViewById(R.id.progressBar);
+        lottieAnimationView = findViewById(R.id.lottie);
         productRecyclerView = findViewById(R.id.recyclerViewProduct);
         refreshLayout = findViewById(R.id.refresh);
+        textView = findViewById(R.id.textView);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,13 +77,13 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         fetchData();
@@ -141,9 +144,10 @@ public class MainActivity extends AppCompatActivity
                 if (response.isSuccessful() && response.code() ==200){
                     products.addAll(response.body().getData());
                     initProducts();
-                    progressBar.setVisibility(View.GONE);
+                    lottieAnimationView.setVisibility(View.GONE);
+                    textView.setVisibility(View.VISIBLE);
                 }else {CommonTask.showToast(MainActivity.this, "Something Wrong !!!");
-                    progressBar.setVisibility(View.GONE);
+                    lottieAnimationView.setVisibility(View.GONE);
                 }
 
                 refreshLayout.setRefreshing(false);
@@ -154,7 +158,7 @@ public class MainActivity extends AppCompatActivity
             public void onFailure(Call<Products> call, Throwable t) {
                 t.printStackTrace();
                 CommonTask.showToast(MainActivity.this, "Can't reach to server");
-                progressBar.setVisibility(View.GONE);
+                lottieAnimationView.setVisibility(View.GONE);
                 refreshLayout.setRefreshing(false);
             }
         });
@@ -173,7 +177,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -223,7 +227,7 @@ public class MainActivity extends AppCompatActivity
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
