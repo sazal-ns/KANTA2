@@ -3,6 +3,7 @@ package com.brosolved.siddiqui.kanta;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -21,6 +22,8 @@ public class LoginActivity extends AppCompatActivity {
     private CountryCodePicker countryCodePicker;
     private AppCompatEditText appCompatEditText;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +33,7 @@ public class LoginActivity extends AppCompatActivity {
         appCompatEditText = findViewById(R.id.phone_number_edt);
 
         countryCodePicker.registerPhoneNumberTextView(appCompatEditText);
+
 
 
         Button button = findViewById(R.id.buttonContinue);
@@ -51,7 +55,6 @@ public class LoginActivity extends AppCompatActivity {
                 finish();
             }
         });
-
     }
 
     @Override
@@ -59,7 +62,9 @@ public class LoginActivity extends AppCompatActivity {
         super.onStart();
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null){
+            Log.i(TAG, "onStart: "+FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
             Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra(_Constant.INTENT_PHONE_NUMBER, FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         }

@@ -1,8 +1,8 @@
 package com.brosolved.siddiqui.kanta.models;
 
-import java.util.List;
-import javax.annotation.Generated;
 import com.google.gson.annotations.SerializedName;
+
+import javax.annotation.Generated;
 
 @Generated("com.robohorse.robopojogenerator")
 public class Category {
@@ -21,9 +21,6 @@ public class Category {
 
 	@SerializedName("title")
 	private String title;
-
-	@SerializedName("products")
-	private List<Product> products;
 
 	public void setUpdatedAt(String updatedAt){
 		this.updatedAt = updatedAt;
@@ -65,13 +62,6 @@ public class Category {
 		return title;
 	}
 
-	public void setProducts(List<Product> products){
-		this.products = products;
-	}
-
-	public List<Product> getProducts(){
-		return products;
-	}
 
 	@Override
  	public String toString(){
@@ -81,8 +71,7 @@ public class Category {
 			",logo = '" + logo + '\'' + 
 			",created_at = '" + createdAt + '\'' + 
 			",id = '" + id + '\'' + 
-			",title = '" + title + '\'' + 
-			",products = '" + products + '\'' + 
+			",title = '" + title + '\'' +
 			"}";
 		}
 }

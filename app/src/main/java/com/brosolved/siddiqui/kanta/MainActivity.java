@@ -1,60 +1,36 @@
 package com.brosolved.siddiqui.kanta;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
-import com.airbnb.lottie.LottieAnimationView;
-import com.brosolved.siddiqui.kanta.adapter.CategoryAdapter;
-import com.brosolved.siddiqui.kanta.adapter.ProductsAdapter;
-import com.brosolved.siddiqui.kanta.models.Categories;
-import com.brosolved.siddiqui.kanta.models.Category;
-import com.brosolved.siddiqui.kanta.models.Product;
-import com.brosolved.siddiqui.kanta.models.Products;
-import com.brosolved.siddiqui.kanta.remote.API;
-import com.brosolved.siddiqui.kanta.remote.TheGateway;
-import com.brosolved.siddiqui.kanta.utils.CommonTask;
+import com.brosolved.siddiqui.kanta.fragments.HomeFragment;
+import com.brosolved.siddiqui.kanta.models.User;
+import com.brosolved.siddiqui.kanta.utils._Constant;
+import com.brosolved.siddiqui.kanta.viewModel.MainViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "MainActivity";
 
-    private List<Category> categories;
-    private List<Product> products;
-
-    private CategoryAdapter categoryAdapter;
-    private ProductsAdapter productsAdapter;
-
-    private LottieAnimationView lottieAnimationView;
-    private RecyclerView productRecyclerView;
-    private SwipeRefreshLayout refreshLayout;
-    private TextView textView;
-
+    private MainViewModel mainViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,10 +39,8 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        lottieAnimationView = findViewById(R.id.lottie);
-        productRecyclerView = findViewById(R.id.recyclerViewProduct);
-        refreshLayout = findViewById(R.id.refresh);
-        textView = findViewById(R.id.textView);
+        mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -86,93 +60,21 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        fetchData();
 
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        mainViewModel.getUserInfo(getIntent().getStringExtra(_Constant.INTENT_PHONE_NUMBER)).observe(this, new Observer<User>() {
             @Override
-            public void onRefresh() {
-                fetchData();
+            public void onChanged(User user) {
+                Log.i(TAG, "onChanged: "+ user.getData());
             }
         });
-    }
 
-    private void initCategories(){
-        LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        RecyclerView recycler = findViewById(R.id.recyclerViewCategories);
-        recycler.setLayoutManager(manager);
-        categoryAdapter = new CategoryAdapter(this, categories);
-        recycler.setAdapter(categoryAdapter);
-    }
+        Fragment fragment = new HomeFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
 
-    private void initProducts(){
-
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
-            productRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-        else productRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
-        productRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        productsAdapter = new ProductsAdapter(this, products);
-        productRecyclerView.setAdapter(productsAdapter);
-    }
-
-    private void fetchData(){
-        API api = TheGateway.path();
-        categories = new ArrayList<>();
-        products = new ArrayList<>();
-
-        api.getAllCategoriesWithProducts().enqueue(new Callback<Categories>() {
-            @Override
-            public void onResponse(Call<Categories> call, Response<Categories> response) {
-                if (response.isSuccessful() && response.code() ==200){
-                    categories.addAll(response.body().getData());
-                    initCategories();
-                }else CommonTask.showToast(MainActivity.this, "Something Wrong !!!");
-
-                categoryAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onFailure(Call<Categories> call, Throwable t) {
-                t.printStackTrace();
-                CommonTask.showToast(MainActivity.this, "Can't reach to server");
-            }
-
-        });
-
-        api.getAllProducts().enqueue(new Callback<Products>() {
-            @Override
-            public void onResponse(Call<Products> call, Response<Products> response) {
-                if (response.isSuccessful() && response.code() ==200){
-                    products.addAll(response.body().getData());
-                    initProducts();
-                    lottieAnimationView.setVisibility(View.GONE);
-                    textView.setVisibility(View.VISIBLE);
-                }else {CommonTask.showToast(MainActivity.this, "Something Wrong !!!");
-                    lottieAnimationView.setVisibility(View.GONE);
-                }
-
-                refreshLayout.setRefreshing(false);
-                productsAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onFailure(Call<Products> call, Throwable t) {
-                t.printStackTrace();
-                CommonTask.showToast(MainActivity.this, "Can't reach to server");
-                lottieAnimationView.setVisibility(View.GONE);
-                refreshLayout.setRefreshing(false);
-            }
-        });
-    }
-
-    @Override
-    public void onConfigurationChanged(@NonNull Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
-            productRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
-        }else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
-            productRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-        }
     }
 
     @Override
