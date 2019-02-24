@@ -1,13 +1,14 @@
 package com.brosolved.siddiqui.kanta;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.brosolved.siddiqui.kanta.fragments.HomeFragment;
+import com.brosolved.siddiqui.kanta.models.MutableUser;
 import com.brosolved.siddiqui.kanta.models.User;
+import com.brosolved.siddiqui.kanta.models.UserInfo;
 import com.brosolved.siddiqui.kanta.utils._Constant;
 import com.brosolved.siddiqui.kanta.viewModel.MainViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -30,7 +31,7 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = "MainActivity";
 
-    private MainViewModel mainViewModel;
+    public UserInfo userInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        MainViewModel mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
 
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -61,12 +62,27 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        mainViewModel.getUserInfo(getIntent().getStringExtra(_Constant.INTENT_PHONE_NUMBER)).observe(this, new Observer<User>() {
-            @Override
-            public void onChanged(User user) {
-                Log.i(TAG, "onChanged: "+ user.getData());
-            }
-        });
+        if (getIntent().getIntExtra(_Constant.IS_BUYER, 1) == 14){
+            mainViewModel.getUserInfo(getIntent().getStringExtra(_Constant.INTENT_PHONE_NUMBER)).observe(this, new Observer<User>() {
+                @Override
+                public void onChanged(User user) {
+                    userInfo = user.getData().get(0);
+                    loadDefaultFragment();
+                }
+            });
+        }else {
+            mainViewModel.addOrGet(getIntent().getStringExtra(_Constant.INTENT_PHONE_NUMBER), "1").observe(this, new Observer<MutableUser>() {
+                @Override
+                public void onChanged(MutableUser user) {
+                    userInfo = user.getData();
+                    loadDefaultFragment();
+                }
+            });
+        }
+
+    }
+
+    private void loadDefaultFragment() {
 
         Fragment fragment = new HomeFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -74,7 +90,6 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.replace(R.id.fragment, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-
     }
 
     @Override

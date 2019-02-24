@@ -1,6 +1,9 @@
 package com.brosolved.siddiqui.kanta.remote;
 
+import android.util.Log;
+
 import com.brosolved.siddiqui.kanta.models.Categories;
+import com.brosolved.siddiqui.kanta.models.MutableUser;
 import com.brosolved.siddiqui.kanta.models.Products;
 import com.brosolved.siddiqui.kanta.models.User;
 
@@ -32,10 +35,12 @@ public class Repository {
     public LiveData<User> loadUser(String mobile) {
         final MutableLiveData<User> liveData = new MutableLiveData<>();
 
+        Log.i(TAG, "loadUser: "+mobile);
         api.getUserInfo(mobile).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful()) {
+                    Log.i(TAG, "onResponse: "+ response.body());
                     liveData.setValue(response.body());
                 } else liveData.setValue(null);
             }
@@ -49,6 +54,29 @@ public class Repository {
 
         return liveData;
     }
+
+    public LiveData<MutableUser> addOrGet(String mobile, String isBuyer) {
+        final MutableLiveData<MutableUser> liveData = new MutableLiveData<>();
+
+        api.addOrGetUser(mobile, isBuyer).enqueue(new Callback<MutableUser>() {
+            @Override
+            public void onResponse(Call<MutableUser> call, Response<MutableUser> response) {
+                if (response.isSuccessful()) {
+                    liveData.setValue(response.body());
+                } else liveData.setValue(null);
+
+            }
+
+            @Override
+            public void onFailure(Call<MutableUser> call, Throwable t) {
+                liveData.setValue(null);
+                t.printStackTrace();
+            }
+        });
+
+        return liveData;
+    }
+
 
     public MutableLiveData<Categories> loadAllCategories() {
         final MutableLiveData<Categories> categoriesMutableLiveData = new MutableLiveData<>();

@@ -24,7 +24,7 @@ public class User {
  	public String toString(){
 		return 
 			"User{" +
-			"data = '" + data + '\'' + 
+			"data = '" + data + '\'' +
 			"}";
 		}
 }

@@ -1,5 +1,6 @@
 package com.brosolved.siddiqui.kanta.viewModel;
 
+import com.brosolved.siddiqui.kanta.models.MutableUser;
 import com.brosolved.siddiqui.kanta.models.User;
 import com.brosolved.siddiqui.kanta.remote.Repository;
 
@@ -20,5 +21,7 @@ public class MainViewModel extends ViewModel {
         return Repository.getInstance().loadUser(number);
 
     }
+
+    public LiveData<MutableUser> addOrGet(String number, String isBuyer) {return  Repository.getInstance().addOrGet(number, isBuyer);}
 
 }

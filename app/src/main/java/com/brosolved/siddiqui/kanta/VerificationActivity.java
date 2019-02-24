@@ -79,6 +79,7 @@ public class VerificationActivity extends AppCompatActivity {
                 if (task.isSuccessful()){
                     Intent intent = new Intent(VerificationActivity.this, MainActivity.class);
                     intent.putExtra(_Constant.INTENT_PHONE_NUMBER, task.getResult().getUser().getPhoneNumber());
+                    intent.putExtra(_Constant.IS_BUYER, getIntent().getIntExtra(_Constant.IS_BUYER, 1));
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 }else
