@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity
             mainViewModel.getUserInfo(getIntent().getStringExtra(_Constant.INTENT_PHONE_NUMBER)).observe(this, new Observer<User>() {
                 @Override
                 public void onChanged(User user) {
+                    if (userInfo != null)
                     userInfo = user.getData().get(0);
                     loadDefaultFragment();
                 }
@@ -74,6 +75,7 @@ public class MainActivity extends AppCompatActivity
             mainViewModel.addOrGet(getIntent().getStringExtra(_Constant.INTENT_PHONE_NUMBER), "1").observe(this, new Observer<MutableUser>() {
                 @Override
                 public void onChanged(MutableUser user) {
+                   if (userInfo != null)
                     userInfo = user.getData();
                     loadDefaultFragment();
                 }
