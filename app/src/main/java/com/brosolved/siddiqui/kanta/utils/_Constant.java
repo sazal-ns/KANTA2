@@ -10,4 +10,10 @@ public class _Constant {
     public static final String IS_LOGIN = "MS_kanta_login";
     public static final String ERROR_TOAST = "Something is Wrong!!!";
     public static final String IS_BUYER = "isBuyer";
+    public static final String PRODUCT_POSITION = "product_position";
+    public static final String PRODUCT_DATA = "product_data";
+    public static final String PRODUCT_IMAGE = "product_image";
+    public static final String PRODUCT_NAME = "product_name";
+    public static final String PRODUCT_PRICE = "product_price";
+    public static final String PRODUCT_DETAILS = "product_details";
 }

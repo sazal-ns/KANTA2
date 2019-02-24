@@ -1,21 +1,28 @@
 package com.brosolved.siddiqui.kanta.fragments;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.brosolved.siddiqui.kanta.DetailsActivity;
 import com.brosolved.siddiqui.kanta.R;
 import com.brosolved.siddiqui.kanta.adapter.CategoryAdapter;
 import com.brosolved.siddiqui.kanta.adapter.ProductsAdapter;
 import com.brosolved.siddiqui.kanta.models.Categories;
+import com.brosolved.siddiqui.kanta.models.Product;
 import com.brosolved.siddiqui.kanta.models.Products;
 import com.brosolved.siddiqui.kanta.utils.CommonTask;
 import com.brosolved.siddiqui.kanta.utils._Constant;
 import com.brosolved.siddiqui.kanta.viewModel.HomeViewModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -46,6 +53,8 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private SwipeRefreshLayout msRefreshLayout;
     private RecyclerView msRecycler;
     private TextView msTextView;
+
+    private List<Product> productList = new ArrayList<>();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -89,6 +98,18 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         msRefreshLayout.setOnRefreshListener(this);
         msRefreshLayout.setEnabled(false);
 
+        msProductsAdapter = new ProductsAdapter(getContext(), productList);
+        msProductRecyclerView.setAdapter(msProductsAdapter);
+        msProductsAdapter.setOnProductClickListener(new ProductsAdapter.OnProductClick() {
+            @Override
+            public void onClick(View view, int position) {
+                Intent intent = new Intent(getActivity(), DetailsActivity.class);
+                intent.putExtra(_Constant.PRODUCT_POSITION, position);
+                intent.putParcelableArrayListExtra(_Constant.PRODUCT_DATA, (ArrayList<? extends Parcelable>) productList);
+                startActivity(intent);
+            }
+        });
+
     }
 
     private void loadCategoryData() {
@@ -110,8 +131,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             @Override
             public void onChanged(Products products) {
                 if (products != null) {
-                    msProductsAdapter = new ProductsAdapter(getContext(), products.getData());
-                    msProductRecyclerView.setAdapter(msProductsAdapter);
+                    productList.addAll(products.getData());
                     msLottieAnimationView.setVisibility(View.GONE);
                     msProductsAdapter.notifyDataSetChanged();
                 } else CommonTask.showToast(getContext(), _Constant.ERROR_TOAST);
@@ -141,5 +161,4 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public void onRefresh() {
         loadProducts();
     }
-
 }

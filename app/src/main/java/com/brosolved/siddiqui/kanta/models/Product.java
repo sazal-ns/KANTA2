@@ -1,10 +1,14 @@
 package com.brosolved.siddiqui.kanta.models;
 
-import javax.annotation.Generated;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
+import javax.annotation.Generated;
+
 @Generated("com.robohorse.robopojogenerator")
-public class Product {
+public class Product implements Parcelable {
 
 	@SerializedName("updated_at")
 	private String updatedAt;
@@ -38,6 +42,20 @@ public class Product {
 
 	@SerializedName("product_category_id")
 	private String productCategoryId;
+
+	private Product(Parcel source) {
+		updatedAt = source.readString();
+		userId = source.readString();
+		price = source.readString();
+		name = source.readString();
+		createdAt = source.readString();
+		details = source.readString();
+		id = source.readInt();
+		imageUrl1 = source.readString();
+		imageUrl2 = source.readString();
+		imageUrl3 = source.readString();
+		productCategoryId = source.readString();
+	}
 
 	public void setUpdatedAt(String  updatedAt){
 		this.updatedAt = updatedAt;
@@ -127,6 +145,18 @@ public class Product {
 		return productCategoryId;
 	}
 
+	public static final Parcelable.Creator<Product> CREATOR = new Creator<Product>() {
+		@Override
+		public Product createFromParcel(Parcel source) {
+			return new Product(source);
+		}
+
+		@Override
+		public Product[] newArray(int size) {
+			return new Product[size];
+		}
+	};
+
 	@Override
  	public String toString(){
 		return 
@@ -144,4 +174,24 @@ public class Product {
 			",product_category_id = '" + productCategoryId + '\'' + 
 			"}";
 		}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(updatedAt);
+		dest.writeString(userId);
+		dest.writeString(price);
+		dest.writeString(name);
+		dest.writeString(createdAt);
+		dest.writeString(details);
+		dest.writeInt(id);
+		dest.writeString(imageUrl1);
+		dest.writeString(imageUrl2);
+		dest.writeString(imageUrl3);
+		dest.writeString(productCategoryId);
+	}
 }

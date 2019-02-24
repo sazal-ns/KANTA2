@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = "MainActivity";
 
-    public UserInfo userInfo;
+    public static UserInfo userInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.brosolved.siddiqui.kanta.R;
 import com.brosolved.siddiqui.kanta.models.Product;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.List;
 
@@ -25,6 +26,8 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
 
     private   Context context;
     private List<Product> products;
+
+    private OnProductClick onProductClick;
 
     public ProductsAdapter(Context context, List<Product> products) {
         this.context = context;
@@ -44,14 +47,13 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
             Glide.with(context)
                     .asBitmap()
                     .load(products.get(position).getImageUrl1())
-                    .into(holder.proudctImage);
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(holder.productImage);
         }catch (Exception e){
             e.printStackTrace();
         }
         holder.name.setText(products.get(position).getName());
         holder.price.setText(products.get(position).getPrice()+" BDT");
-
-
 
     }
 
@@ -60,15 +62,29 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
         return products.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
-        ImageView proudctImage;
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        ImageView productImage;
         TextView name, price;
 
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
-            proudctImage = itemView.findViewById(R.id.productImage);
+            productImage = itemView.findViewById(R.id.productImage);
             name = itemView.findViewById(R.id.productName);
             price = itemView.findViewById(R.id.productPrice);
+            productImage.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View v) {
+            onProductClick.onClick(v, getAdapterPosition());
+        }
+    }
+
+    public void setOnProductClickListener(OnProductClick onProductClick){
+        this.onProductClick = onProductClick;
+    }
+
+    public interface OnProductClick{
+        void onClick(View view, int position);
     }
 }
