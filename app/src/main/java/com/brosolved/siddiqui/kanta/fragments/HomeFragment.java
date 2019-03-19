@@ -15,6 +15,7 @@ import com.brosolved.siddiqui.kanta.R;
 import com.brosolved.siddiqui.kanta.adapter.CategoryAdapter;
 import com.brosolved.siddiqui.kanta.adapter.ProductsAdapter;
 import com.brosolved.siddiqui.kanta.models.Categories;
+import com.brosolved.siddiqui.kanta.models.Category;
 import com.brosolved.siddiqui.kanta.models.Product;
 import com.brosolved.siddiqui.kanta.models.Products;
 import com.brosolved.siddiqui.kanta.utils.CommonTask;
@@ -55,6 +56,8 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private TextView msTextView;
 
     private List<Product> productList = new ArrayList<>();
+    private List<Product> catProduct = new ArrayList<>();
+    private List<Category> categoryList = new ArrayList<>();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -110,15 +113,33 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             }
         });
 
+        msCategoryAdapter = new CategoryAdapter(getContext(), categoryList);
+        msRecycler.setAdapter(msCategoryAdapter);
+        msCategoryAdapter.setOnCategoryClickListener(new CategoryAdapter.OnCategoryClick() {
+            @Override
+            public void onClick(View view, int position) {
+
+                productList.clear();
+                for (Product product : catProduct) {
+                    if (product.getProductCategoryId().equals(String.valueOf(categoryList.get(position).getId()))) {
+                        productList.add(product);
+                    }
+                }
+                //Log.e(TAG, "onClick: "+productList );
+                msProductsAdapter.notifyDataSetChanged();
+
+            }
+        });
+
     }
+
 
     private void loadCategoryData() {
         mViewModel.getCategories().observe(this, new Observer<Categories>() {
             @Override
             public void onChanged(Categories categories) {
                 if (categories != null) {
-                    msCategoryAdapter = new CategoryAdapter(getContext(), categories.getData());
-                    msRecycler.setAdapter(msCategoryAdapter);
+                    categoryList.addAll(categories.getData());
                     msCategoryAdapter.notifyDataSetChanged();
                 } else CommonTask.showToast(getContext(), _Constant.ERROR_TOAST);
                 msTextView.setVisibility(View.VISIBLE);
@@ -131,7 +152,8 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             @Override
             public void onChanged(Products products) {
                 if (products != null) {
-                    productList.addAll(products.getData());
+                    catProduct.addAll(products.getData());
+                    productList.addAll(catProduct);
                     msLottieAnimationView.setVisibility(View.GONE);
                     msProductsAdapter.notifyDataSetChanged();
                 } else CommonTask.showToast(getContext(), _Constant.ERROR_TOAST);

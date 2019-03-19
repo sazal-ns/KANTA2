@@ -1,7 +1,6 @@
 package com.brosolved.siddiqui.kanta.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +29,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     private Context context;
     private List<Category> categories;
 
+    private OnCategoryClick onCategoryClick;
+
     public CategoryAdapter(Context context, List<Category> categories) {
         this.context = context;
         this.categories = categories;
@@ -53,12 +54,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
 
         holder.textView.setText(categories.get(position).getTitle());
 
-        holder.imageView.setOnClickListener(new View.OnClickListener() {
+        /*holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: "+categories.get(position).getTitle());
             }
-        });
+        });*/
     }
 
     @Override
@@ -66,7 +67,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         return categories.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         CircleImageView imageView;
         TextView textView;
 
@@ -74,6 +75,24 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
             super(itemView);
             imageView = itemView.findViewById(R.id.categoryImage);
             textView = itemView.findViewById(R.id.categoryName);
+            imageView.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View v) {
+            try {
+                onCategoryClick.onClick(v, getAdapterPosition());
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void setOnCategoryClickListener(OnCategoryClick onCategoryClick){
+        this.onCategoryClick = onCategoryClick;
+    }
+
+    public interface OnCategoryClick {
+        void onClick(View view, int position);
     }
 }
