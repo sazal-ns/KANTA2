@@ -94,8 +94,10 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         LinearLayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         msRecycler.setLayoutManager(manager);
 
+        categoryList.clear();
         loadCategoryData();
 
+        catProduct.clear();
         loadProducts();
 
         msRefreshLayout.setOnRefreshListener(this);
@@ -125,7 +127,6 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                         productList.add(product);
                     }
                 }
-                //Log.e(TAG, "onClick: "+productList );
                 msProductsAdapter.notifyDataSetChanged();
 
             }
@@ -153,6 +154,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             public void onChanged(Products products) {
                 if (products != null) {
                     catProduct.addAll(products.getData());
+                    productList.clear();
                     productList.addAll(catProduct);
                     msLottieAnimationView.setVisibility(View.GONE);
                     msProductsAdapter.notifyDataSetChanged();

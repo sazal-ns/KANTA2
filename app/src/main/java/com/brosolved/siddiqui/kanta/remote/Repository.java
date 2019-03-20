@@ -1,11 +1,10 @@
 package com.brosolved.siddiqui.kanta.remote;
 
-import android.util.Log;
-
 import com.brosolved.siddiqui.kanta.models.Categories;
 import com.brosolved.siddiqui.kanta.models.MutableUser;
 import com.brosolved.siddiqui.kanta.models.Products;
 import com.brosolved.siddiqui.kanta.models.User;
+import com.brosolved.siddiqui.kanta.models.UserInfo;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -35,12 +34,10 @@ public class Repository {
     public LiveData<User> loadUser(String mobile) {
         final MutableLiveData<User> liveData = new MutableLiveData<>();
 
-        Log.i(TAG, "loadUser: "+mobile);
         api.getUserInfo(mobile).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful()) {
-                    Log.i(TAG, "onResponse: "+ response.body());
                     liveData.setValue(response.body());
                 } else liveData.setValue(null);
             }
@@ -69,6 +66,29 @@ public class Repository {
 
             @Override
             public void onFailure(Call<MutableUser> call, Throwable t) {
+                liveData.setValue(null);
+                t.printStackTrace();
+            }
+        });
+
+        return liveData;
+    }
+
+    public  LiveData<UserInfo> updateUserInfo(UserInfo userInfo){
+        final MutableLiveData<UserInfo> liveData = new MutableLiveData<>();
+
+        api.updateUserInfo(userInfo.getId(), userInfo.getName(), userInfo.getMobile(), userInfo.getShopName(), userInfo.getAddress()).enqueue(new Callback<UserInfo>() {
+            @Override
+            public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
+                if (response.isSuccessful()){
+                    liveData.setValue(response.body());
+                }else liveData.setValue(null);
+
+                //Log.e(TAG, "onResponse: "+ response );
+            }
+
+            @Override
+            public void onFailure(Call<UserInfo> call, Throwable t) {
                 liveData.setValue(null);
                 t.printStackTrace();
             }

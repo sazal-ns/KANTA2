@@ -38,7 +38,7 @@ public class UserInfo {
 		this.address = address;
 	}
 
-	public Object getAddress(){
+	public String  getAddress(){
 		return address;
 	}
 

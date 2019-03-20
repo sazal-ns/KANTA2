@@ -1,6 +1,7 @@
 package com.brosolved.siddiqui.kanta.utils;
 
 import android.content.Context;
+import android.widget.EditText;
 import android.widget.Toast;
 
 /*
@@ -19,6 +20,17 @@ public class CommonTask {
 
         if (input.isEmpty() || input.length() != length)
             isOk = false;
+
+        return isOk;
+    }
+
+    public static boolean checkInput(String input, EditText editText){
+        boolean isOk = true;
+
+        if (input.isEmpty()) {
+            isOk = false;
+            editText.setError("required");
+        }else editText.setError(null);
 
         return isOk;
     }

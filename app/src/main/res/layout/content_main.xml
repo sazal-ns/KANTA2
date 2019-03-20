@@ -9,7 +9,7 @@
     tools:showIn="@layout/app_bar_main">
 
 
-    <fragment
+    <FrameLayout
         android:id="@+id/fragment"
         android:name="com.brosolved.siddiqui.kanta.fragments.HomeFragment"
         android:layout_width="0dp"

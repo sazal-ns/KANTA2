@@ -4,8 +4,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.brosolved.siddiqui.kanta.fragments.HomeFragment;
+import com.brosolved.siddiqui.kanta.fragments.ProfileFragment;
 import com.brosolved.siddiqui.kanta.models.MutableUser;
 import com.brosolved.siddiqui.kanta.models.User;
 import com.brosolved.siddiqui.kanta.models.UserInfo;
@@ -32,6 +34,8 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = "MainActivity";
 
     public static UserInfo userInfo;
+
+    private TextView name, contact;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,37 +65,36 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        View navHeader = navigationView.getHeaderView(0);
+        name = navHeader.findViewById(R.id.name);
+        contact = navHeader.findViewById(R.id.contact);
 
         if (getIntent().getIntExtra(_Constant.IS_BUYER, 1) == 14){
             mainViewModel.getUserInfo(getIntent().getStringExtra(_Constant.INTENT_PHONE_NUMBER)).observe(this, new Observer<User>() {
                 @Override
                 public void onChanged(User user) {
-                    if (userInfo != null)
-                    userInfo = user.getData().get(0);
-                    loadDefaultFragment();
+                    if (user != null) {
+                        userInfo = user.getData().get(0);
+                        name.setText(userInfo.getName());
+                        contact.setText(userInfo.getMobile());
+                    }
+                    openFragment(new HomeFragment());
                 }
             });
         }else {
             mainViewModel.addOrGet(getIntent().getStringExtra(_Constant.INTENT_PHONE_NUMBER), "1").observe(this, new Observer<MutableUser>() {
                 @Override
                 public void onChanged(MutableUser user) {
-                   if (userInfo != null)
-                    userInfo = user.getData();
-                    loadDefaultFragment();
+                   if (user != null) {
+                       userInfo = user.getData();
+                       name.setText(userInfo.getName());
+                       contact.setText(userInfo.getMobile());
+                   }
+                    openFragment(new HomeFragment());
                 }
             });
         }
 
-    }
-
-    private void loadDefaultFragment() {
-
-        Fragment fragment = new HomeFragment();
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment, fragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
     }
 
     @Override
@@ -132,23 +135,27 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_order) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_processing) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_buy) {
 
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_profile) {
+            openFragment(new ProfileFragment());
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void openFragment(Fragment fragment) {
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = manager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
 }
