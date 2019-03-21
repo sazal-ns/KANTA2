@@ -71,13 +71,13 @@ public class ProfileFragment extends Fragment {
 
         name.setText(userInfo.getName());
         number.setText(userInfo.getMobile());
-        shopName.setText(userInfo.getShopName());
-        shopAddress.setText(userInfo.getAddress());
+        //shopName.setText(userInfo.getShopName());
+        //shopAddress.setText(userInfo.getAddress());
 
         nameEdit.setText(userInfo.getName());
         numberEdit.setText(userInfo.getMobile());
-        shopNameEdit.setText(userInfo.getShopName());
-        shopAddressEdit.setText(userInfo.getAddress());
+        //shopNameEdit.setText(userInfo.getShopName());
+        //shopAddressEdit.setText(userInfo.getAddress());
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,14 +92,14 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                if (profileViewSwitcher.getCurrentView() == editProfile){
-                   if (CommonTask.checkInput(nameEdit.getText().toString(), nameEdit) && CommonTask.checkInput(numberEdit.getText().toString(), numberEdit) && CommonTask.checkInput(shopNameEdit.getText().toString(), shopNameEdit) && CommonTask.checkInput(shopAddressEdit.getText().toString(), shopAddressEdit)){
+                   if (CommonTask.checkInput(nameEdit.getText().toString(), nameEdit) && CommonTask.checkInput(numberEdit.getText().toString(), numberEdit) ){
 
                        UserInfo updateInfo = new UserInfo();
                        updateInfo.setId(userInfo.getId());
                        updateInfo.setName(nameEdit.getText().toString().trim());
                        updateInfo.setMobile(numberEdit.getText().toString().trim());
-                       updateInfo.setShopName(shopNameEdit.getText().toString().trim());
-                       updateInfo.setAddress(shopAddressEdit.getText().toString().trim());
+                      /* updateInfo.setShopName(shopNameEdit.getText().toString().trim());
+                       updateInfo.setAddress(shopAddressEdit.getText().toString().trim());*/
 
                        mViewModel.updateUserInfo(updateInfo).observe(ProfileFragment.this, new Observer<UserInfo>() {
                            @Override
@@ -107,8 +107,8 @@ public class ProfileFragment extends Fragment {
                                if (userInfo != null){
                                    name.setText(userInfo.getName());
                                    number.setText(userInfo.getMobile());
-                                   shopName.setText(userInfo.getShopName());
-                                   shopAddress.setText(userInfo.getAddress());
+                                  /* shopName.setText(userInfo.getShopName());
+                                   shopAddress.setText(userInfo.getAddress());*/
                                    profileViewSwitcher.showPrevious();
                                }else CommonTask.showToast(getContext(), "Something Wrong");
                            }

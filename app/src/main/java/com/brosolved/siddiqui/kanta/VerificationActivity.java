@@ -2,6 +2,7 @@ package com.brosolved.siddiqui.kanta;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -44,13 +45,15 @@ public class VerificationActivity extends AppCompatActivity {
     }
 
     private void sendVerificationCode(String number) {
+        Log.i("BOO", "sendVerificationCode: "+number);
         progressBar.setVisibility(View.VISIBLE);
-        PhoneAuthProvider.getInstance().verifyPhoneNumber(number, 60, TimeUnit.SECONDS, TaskExecutors.MAIN_THREAD, new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+        PhoneAuthProvider.getInstance().verifyPhoneNumber(number, 30, TimeUnit.SECONDS, TaskExecutors.MAIN_THREAD, new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
             @Override
             public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                 super.onCodeSent(s, forceResendingToken);
                 verificationId = s;
+                Log.i("Boo", "onCodeSent: "+s);
             }
 
             @Override
@@ -59,11 +62,19 @@ public class VerificationActivity extends AppCompatActivity {
                     editText.setText(phoneAuthCredential.getSmsCode());
                     verifyCode(phoneAuthCredential.getSmsCode());
                 }
+                Log.i("BOO", "onVerificationCompleted: "+phoneAuthCredential.getSignInMethod()+" "+phoneAuthCredential.getProvider()+" "+phoneAuthCredential.getSmsCode());
             }
 
             @Override
             public void onVerificationFailed(FirebaseException e) {
                 CommonTask.showToast(VerificationActivity.this, e.getMessage());
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onCodeAutoRetrievalTimeOut(String s) {
+                super.onCodeAutoRetrievalTimeOut(s);
+                Log.i("Boo", "onCodeAutoRetrievalTimeOut: "+s);
             }
         });
     }
@@ -76,6 +87,7 @@ public class VerificationActivity extends AppCompatActivity {
         mAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
+                Log.i("BOO", "onComplete: "+task);
                 if (task.isSuccessful()){
                     Intent intent = new Intent(VerificationActivity.this, MainActivity.class);
                     intent.putExtra(_Constant.INTENT_PHONE_NUMBER, task.getResult().getUser().getPhoneNumber());
