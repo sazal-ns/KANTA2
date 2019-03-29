@@ -73,8 +73,7 @@
                 android:layout_weight="1"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
-                android:src="@drawable/ic_add_a_photo_black_24dp"
-                android:onClick="onViewClicked"/>
+                android:src="@drawable/ic_add_a_photo_black_24dp" />
 
         </LinearLayout>
 
@@ -86,7 +85,6 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="20dp"
             android:layout_marginRight="8dp"
-            android:text="Add Product"
-            android:onClick="onViewClicked"/>
+            android:text="Add Product" />
     </LinearLayout>
 </ScrollView>
