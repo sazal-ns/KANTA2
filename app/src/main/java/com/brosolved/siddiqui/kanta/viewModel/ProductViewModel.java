@@ -5,6 +5,8 @@ import com.brosolved.siddiqui.kanta.models.Categories;
 import com.brosolved.siddiqui.kanta.models.Product;
 import com.brosolved.siddiqui.kanta.remote.Repository;
 
+import java.util.List;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -21,5 +23,9 @@ public class ProductViewModel extends ViewModel {
 
     public LiveData<Boolean> addProduct(Product product){
         return Repository.getInstance().addProduct(product, String.valueOf(MainActivity.userInfo.getId()));
+    }
+
+    public LiveData<List<Product>> getProducts(int id){
+        return Repository.getInstance().loadAllProducts(id);
     }
 }

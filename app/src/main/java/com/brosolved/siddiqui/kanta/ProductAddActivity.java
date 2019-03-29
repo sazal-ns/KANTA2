@@ -39,7 +39,7 @@ public class ProductAddActivity extends AppCompatActivity {
     private Spinner categorySpinner;
     private ImageButton imageButton;
     private Button saveButton;
-    private TextInputLayout product, price, desc;
+    private TextInputLayout product, price, desc, quantity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +54,7 @@ public class ProductAddActivity extends AppCompatActivity {
         product = findViewById(R.id.productName);
         price = findViewById(R.id.price);
         desc = findViewById(R.id.description);
+        quantity = findViewById(R.id.quantity);
 
         viewModel.getCategory().observe(this, new Observer<Categories>() {
             @Override
@@ -95,11 +96,12 @@ public class ProductAddActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (CommonTask.checkInput(product.getEditText().getText().toString()) && CommonTask.checkInput(price.getEditText().getText().toString()) && CommonTask.checkInput(desc.getEditText().getText().toString()) && image1.isFile()){
+                if (CommonTask.checkInput(product.getEditText().getText().toString()) && CommonTask.checkInput(price.getEditText().getText().toString()) && CommonTask.checkInput(desc.getEditText().getText().toString()) && image1.isFile() && CommonTask.checkInput(quantity.getEditText().getText().toString())){
                     Product theProduct = new Product();
                     theProduct.setName(product.getEditText().getText().toString().trim());
                     theProduct.setPrice(price.getEditText().getText().toString().trim());
                     theProduct.setDetails(desc.getEditText().getText().toString().trim());
+                    theProduct.setQuantity(Integer.parseInt(quantity.getEditText().getText().toString().trim()));
                     theProduct.setProductCategoryId(String.valueOf(catId));
                     theProduct.setImageFile(image1);
 

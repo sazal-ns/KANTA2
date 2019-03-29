@@ -2,9 +2,12 @@ package com.brosolved.siddiqui.kanta.remote;
 
 import com.brosolved.siddiqui.kanta.models.Categories;
 import com.brosolved.siddiqui.kanta.models.MutableUser;
+import com.brosolved.siddiqui.kanta.models.Product;
 import com.brosolved.siddiqui.kanta.models.Products;
 import com.brosolved.siddiqui.kanta.models.User;
 import com.brosolved.siddiqui.kanta.models.UserInfo;
+
+import java.util.List;
 
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -42,5 +45,8 @@ public interface API {
 
     @POST("product")
     Call<Boolean> addProduct(@Body RequestBody file);
+
+    @GET("productByUser/{id}")
+    Call<List<Product>> getAllProducts(@Path("id") int id);
 
 }

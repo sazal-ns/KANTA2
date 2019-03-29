@@ -3,6 +3,7 @@ package com.brosolved.siddiqui.kanta;
 import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import com.brosolved.siddiqui.kanta.fragments.HomeFragment;
 import com.brosolved.siddiqui.kanta.fragments.ProfileFragment;
+import com.brosolved.siddiqui.kanta.fragments.ShopProductFragment;
 import com.brosolved.siddiqui.kanta.models.MutableUser;
 import com.brosolved.siddiqui.kanta.models.User;
 import com.brosolved.siddiqui.kanta.models.UserInfo;
@@ -85,6 +87,7 @@ public class MainActivity extends AppCompatActivity
                         userInfo = user.getData().get(0);
                         name.setText(userInfo.getName());
                         contact.setText(userInfo.getMobile());
+                        Log.d(TAG, "User ID & Name: "+userInfo.getId()+" "+userInfo.getName());
                     }
                     openFragment(new HomeFragment());
                 }
@@ -97,6 +100,7 @@ public class MainActivity extends AppCompatActivity
                        userInfo = user.getData();
                        name.setText(userInfo.getName());
                        contact.setText(userInfo.getMobile());
+                       Log.d(TAG, "User ID & Name: "+userInfo.getId()+" "+userInfo.getName());
                    }
                     openFragment(new HomeFragment());
                 }
@@ -153,6 +157,8 @@ public class MainActivity extends AppCompatActivity
             openFragment(new ProfileFragment());
         }else if (id == R.id.nav_add_product)
             startActivity(new Intent(MainActivity.this, ProductAddActivity.class));
+        else if (id == R.id.nav_shop_product)
+            openFragment(new ShopProductFragment());
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

@@ -9,6 +9,8 @@ import com.brosolved.siddiqui.kanta.models.Products;
 import com.brosolved.siddiqui.kanta.models.User;
 import com.brosolved.siddiqui.kanta.models.UserInfo;
 
+import java.util.List;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import okhttp3.MediaType;
@@ -103,7 +105,6 @@ public class Repository {
         return liveData;
     }
 
-
     public MutableLiveData<Categories> loadAllCategories() {
         final MutableLiveData<Categories> categoriesMutableLiveData = new MutableLiveData<>();
 
@@ -144,6 +145,26 @@ public class Repository {
         return productsMutableLiveData;
     }
 
+    public LiveData<List<Product>> loadAllProducts(int id) {
+        final MutableLiveData<List<Product>> productsMutableLiveData = new MutableLiveData<>();
+
+        api.getAllProducts(id).enqueue(new Callback<List<Product>>() {
+            @Override
+            public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
+                if (response.isSuccessful()) productsMutableLiveData.setValue(response.body());
+                else productsMutableLiveData.setValue(null);
+            }
+
+            @Override
+            public void onFailure(Call<List<Product>> call, Throwable t) {
+                productsMutableLiveData.setValue(null);
+                t.printStackTrace();
+            }
+        });
+
+        return productsMutableLiveData;
+    }
+
     public LiveData<Boolean> addProduct(Product product, String userID){
         final MutableLiveData<Boolean> data = new MutableLiveData<>();
         data.setValue(false);
@@ -153,6 +174,7 @@ public class Repository {
         builder.addFormDataPart("name", product.getName());
         builder.addFormDataPart("price", product.getPrice());
         builder.addFormDataPart("details", product.getDetails());
+        builder.addFormDataPart("quantity", String.valueOf(product.getQuantity()));
         builder.addFormDataPart("user_id", userID);
         builder.addFormDataPart("product_category_id", product.getProductCategoryId());
         builder.addFormDataPart("image_url_1",product.getImageFile().getName(),RequestBody.create(MediaType.parse("image/*"), product.getImageFile()));

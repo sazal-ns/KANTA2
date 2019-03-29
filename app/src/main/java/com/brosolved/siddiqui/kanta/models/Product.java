@@ -47,6 +47,9 @@ public class Product implements Parcelable {
 
 	private File imageFile;
 
+	@SerializedName("quantity")
+	private int quantity;
+
 	public Product() {
 	}
 
@@ -62,6 +65,15 @@ public class Product implements Parcelable {
 		imageUrl2 = source.readString();
 		imageUrl3 = source.readString();
 		productCategoryId = source.readString();
+		quantity = source.readInt();
+	}
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
 	}
 
 	public File getImageFile() {
@@ -208,5 +220,6 @@ public class Product implements Parcelable {
 		dest.writeString(imageUrl2);
 		dest.writeString(imageUrl3);
 		dest.writeString(productCategoryId);
+		dest.writeInt(quantity);
 	}
 }
