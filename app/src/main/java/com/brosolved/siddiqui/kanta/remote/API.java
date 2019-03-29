@@ -6,7 +6,9 @@ import com.brosolved.siddiqui.kanta.models.Products;
 import com.brosolved.siddiqui.kanta.models.User;
 import com.brosolved.siddiqui.kanta.models.UserInfo;
 
+import okhttp3.RequestBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -37,5 +39,8 @@ public interface API {
     @FormUrlEncoded
     @PUT("user/{id}")
     Call<UserInfo> updateUserInfo(@Path("id") int id, @Field("name") String name, @Field("mobile") String mobile, @Field("shop_name") String shop_name, @Field("address") String address);
+
+    @POST("product")
+    Call<Boolean> addProduct(@Body RequestBody file);
 
 }

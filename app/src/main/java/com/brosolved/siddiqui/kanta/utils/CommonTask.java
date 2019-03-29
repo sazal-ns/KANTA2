@@ -34,4 +34,13 @@ public class CommonTask {
 
         return isOk;
     }
+
+    public static boolean checkInput(String input){
+        boolean isOk = true;
+
+        if (input.isEmpty())
+            isOk = false;
+
+        return isOk;
+    }
 }

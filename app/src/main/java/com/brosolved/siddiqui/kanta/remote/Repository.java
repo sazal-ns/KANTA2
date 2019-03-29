@@ -1,13 +1,19 @@
 package com.brosolved.siddiqui.kanta.remote;
 
+import android.util.Log;
+
 import com.brosolved.siddiqui.kanta.models.Categories;
 import com.brosolved.siddiqui.kanta.models.MutableUser;
+import com.brosolved.siddiqui.kanta.models.Product;
 import com.brosolved.siddiqui.kanta.models.Products;
 import com.brosolved.siddiqui.kanta.models.User;
 import com.brosolved.siddiqui.kanta.models.UserInfo;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -137,4 +143,42 @@ public class Repository {
 
         return productsMutableLiveData;
     }
+
+    public LiveData<Boolean> addProduct(Product product, String userID){
+        final MutableLiveData<Boolean> data = new MutableLiveData<>();
+        data.setValue(false);
+
+        MultipartBody.Builder builder = new MultipartBody.Builder();
+        builder.setType(MultipartBody.FORM);
+        builder.addFormDataPart("name", product.getName());
+        builder.addFormDataPart("price", product.getPrice());
+        builder.addFormDataPart("details", product.getDetails());
+        builder.addFormDataPart("user_id", userID);
+        builder.addFormDataPart("product_category_id", product.getProductCategoryId());
+        builder.addFormDataPart("image_url_1",product.getImageFile().getName(),RequestBody.create(MediaType.parse("image/*"), product.getImageFile()));
+        final MultipartBody requestBody = builder.build();
+
+        api.addProduct(requestBody).enqueue(new Callback<Boolean>() {
+            @Override
+            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                if (response.isSuccessful() && response.code() == 200)
+                    data.setValue(response.body());
+                else {
+                    data.setValue(false);
+                    Log.e(TAG, "onResponse: "+response.errorBody());
+                }
+
+                Log.i(TAG, "onResponse: "+response);
+            }
+
+            @Override
+            public void onFailure(Call<Boolean> call, Throwable t) {
+                t.printStackTrace();
+                data.setValue(false);
+            }
+        });
+
+        return data;
+    }
+
 }

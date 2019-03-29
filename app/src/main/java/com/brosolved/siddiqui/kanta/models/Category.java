@@ -65,13 +65,7 @@ public class Category {
 
 	@Override
  	public String toString(){
-		return 
-			"Category{" +
-			"updated_at = '" + updatedAt + '\'' + 
-			",logo = '" + logo + '\'' + 
-			",created_at = '" + createdAt + '\'' + 
-			",id = '" + id + '\'' + 
-			",title = '" + title + '\'' +
-			"}";
+		return
+			 title;
 		}
 }

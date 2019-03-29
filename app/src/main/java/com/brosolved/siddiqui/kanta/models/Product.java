@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.File;
+
 import javax.annotation.Generated;
 
 @Generated("com.robohorse.robopojogenerator")
@@ -43,6 +45,11 @@ public class Product implements Parcelable {
 	@SerializedName("product_category_id")
 	private String productCategoryId;
 
+	private File imageFile;
+
+	public Product() {
+	}
+
 	private Product(Parcel source) {
 		updatedAt = source.readString();
 		userId = source.readString();
@@ -55,6 +62,14 @@ public class Product implements Parcelable {
 		imageUrl2 = source.readString();
 		imageUrl3 = source.readString();
 		productCategoryId = source.readString();
+	}
+
+	public File getImageFile() {
+		return imageFile;
+	}
+
+	public void setImageFile(File imageFile) {
+		this.imageFile = imageFile;
 	}
 
 	public void setUpdatedAt(String  updatedAt){

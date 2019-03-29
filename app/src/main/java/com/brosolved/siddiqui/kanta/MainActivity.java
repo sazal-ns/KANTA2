@@ -1,5 +1,7 @@
 package com.brosolved.siddiqui.kanta;
 
+import android.Manifest;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,6 +13,7 @@ import com.brosolved.siddiqui.kanta.fragments.ProfileFragment;
 import com.brosolved.siddiqui.kanta.models.MutableUser;
 import com.brosolved.siddiqui.kanta.models.User;
 import com.brosolved.siddiqui.kanta.models.UserInfo;
+import com.brosolved.siddiqui.kanta.utils.RuntimePermissionHandler;
 import com.brosolved.siddiqui.kanta.utils._Constant;
 import com.brosolved.siddiqui.kanta.viewModel.MainViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -29,7 +32,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, RuntimePermissionHandler.RuntimePermissionListener {
 
     private static final String TAG = "MainActivity";
 
@@ -37,12 +40,17 @@ public class MainActivity extends AppCompatActivity
 
     private TextView name, contact;
 
+    private RuntimePermissionHandler handler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        handler = new RuntimePermissionHandler(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 101, this);
+
 
         MainViewModel mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
 
@@ -143,7 +151,8 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_profile) {
             openFragment(new ProfileFragment());
-        }
+        }else if (id == R.id.nav_add_product)
+            startActivity(new Intent(MainActivity.this, ProductAddActivity.class));
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -158,4 +167,13 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.commit();
     }
 
+    @Override
+    public void onAllow() {
+
+    }
+
+    @Override
+    public void onDeny() {
+        handler = new RuntimePermissionHandler(this, new String[]{Manifest.permission.CALL_PHONE}, 101, this);
+    }
 }
