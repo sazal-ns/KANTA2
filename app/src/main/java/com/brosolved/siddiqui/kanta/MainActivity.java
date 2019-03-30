@@ -18,9 +18,7 @@ import com.brosolved.siddiqui.kanta.models.UserInfo;
 import com.brosolved.siddiqui.kanta.utils.RuntimePermissionHandler;
 import com.brosolved.siddiqui.kanta.utils._Constant;
 import com.brosolved.siddiqui.kanta.viewModel.MainViewModel;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -55,16 +53,6 @@ public class MainActivity extends AppCompatActivity
 
 
         MainViewModel mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-
-
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

@@ -55,7 +55,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
                 .into(holder.imageView);
 
         holder.name.setText(products.get(position).getName());
-        holder.price.setText(products.get(position).getPrice());
+        holder.price.setText(products.get(position).getPrice()+" BDT");
         holder.quaintly.setText(String.valueOf(products.get(position).getQuantity()));
 
     }

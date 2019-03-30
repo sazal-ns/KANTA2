@@ -6,6 +6,7 @@ import com.brosolved.siddiqui.kanta.models.Categories;
 import com.brosolved.siddiqui.kanta.models.MutableUser;
 import com.brosolved.siddiqui.kanta.models.Product;
 import com.brosolved.siddiqui.kanta.models.Products;
+import com.brosolved.siddiqui.kanta.models.Status;
 import com.brosolved.siddiqui.kanta.models.User;
 import com.brosolved.siddiqui.kanta.models.UserInfo;
 
@@ -197,6 +198,52 @@ public class Repository {
             public void onFailure(Call<Boolean> call, Throwable t) {
                 t.printStackTrace();
                 data.setValue(false);
+            }
+        });
+
+        return data;
+    }
+
+    public LiveData<Status> delteProduct(int id){
+        final  MutableLiveData<Status> data = new MutableLiveData<>();
+
+        api.deleteProduct(id).enqueue(new Callback<Status>() {
+            @Override
+            public void onResponse(Call<Status> call, Response<Status> response) {
+                if (response.isSuccessful())
+                    data.setValue(response.body());
+                else
+                    data.setValue(null);
+
+            }
+
+            @Override
+            public void onFailure(Call<Status> call, Throwable t) {
+                data.setValue(null);
+                t.printStackTrace();
+            }
+        });
+
+        return data;
+    }
+
+    public LiveData<Product> updateProduct(Product product){
+        final MutableLiveData<Product> data = new MutableLiveData<>();
+
+        api.updateProduct(product.getId(), product.getName(), Integer.parseInt(product.getPrice()), product.getDetails(), product.getQuantity()).enqueue(new Callback<Product>() {
+            @Override
+            public void onResponse(Call<Product> call, Response<Product> response) {
+                if (response.isSuccessful())
+                    data.setValue(response.body());
+                else
+                    data.setValue(null);
+
+                Log.i(TAG, "onResponse: "+response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Product> call, Throwable t) {
+                data.setValue(null);
             }
         });
 

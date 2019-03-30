@@ -3,6 +3,7 @@ package com.brosolved.siddiqui.kanta.viewModel;
 import com.brosolved.siddiqui.kanta.MainActivity;
 import com.brosolved.siddiqui.kanta.models.Categories;
 import com.brosolved.siddiqui.kanta.models.Product;
+import com.brosolved.siddiqui.kanta.models.Status;
 import com.brosolved.siddiqui.kanta.remote.Repository;
 
 import java.util.List;
@@ -27,5 +28,13 @@ public class ProductViewModel extends ViewModel {
 
     public LiveData<List<Product>> getProducts(int id){
         return Repository.getInstance().loadAllProducts(id);
+    }
+
+    public  LiveData<Status> delete(int id){
+        return Repository.getInstance().delteProduct(id);
+    }
+
+    public LiveData<Product> update(Product product){
+        return Repository.getInstance().updateProduct(product);
     }
 }

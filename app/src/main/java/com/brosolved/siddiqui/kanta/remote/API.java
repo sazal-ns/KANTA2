@@ -4,6 +4,7 @@ import com.brosolved.siddiqui.kanta.models.Categories;
 import com.brosolved.siddiqui.kanta.models.MutableUser;
 import com.brosolved.siddiqui.kanta.models.Product;
 import com.brosolved.siddiqui.kanta.models.Products;
+import com.brosolved.siddiqui.kanta.models.Status;
 import com.brosolved.siddiqui.kanta.models.User;
 import com.brosolved.siddiqui.kanta.models.UserInfo;
 
@@ -12,6 +13,7 @@ import java.util.List;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -48,5 +50,12 @@ public interface API {
 
     @GET("productByUser/{id}")
     Call<List<Product>> getAllProducts(@Path("id") int id);
+
+    @DELETE("product/{id}")
+    Call<Status> deleteProduct(@Path("id") int id);
+
+    @FormUrlEncoded
+    @PUT("product/{id}")
+    Call<Product> updateProduct(@Path("id") int id, @Field("name") String name, @Field("price") int price, @Field("details") String details, @Field("quantity") int quantity);
 
 }
