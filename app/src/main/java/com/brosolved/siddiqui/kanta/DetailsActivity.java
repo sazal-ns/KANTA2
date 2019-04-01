@@ -5,10 +5,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.brosolved.siddiqui.kanta.models.Product;
+import com.brosolved.siddiqui.kanta.utils.CommonTask;
 import com.brosolved.siddiqui.kanta.utils._Constant;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -104,10 +106,11 @@ public class DetailsActivity extends AppCompatActivity {
             View rootView = inflater.inflate(R.layout.fragment_details, container, false);
 
              ImageView image =rootView.findViewById(R.id.mainImageView);
-             TextView name = rootView.findViewById(R.id.productNameTextView);
+             final TextView name = rootView.findViewById(R.id.productNameTextView);
              TextView price = rootView.findViewById(R.id.priceTextView);
-             TextView number = rootView.findViewById(R.id.mobileTextView);
+             ImageButton number = rootView.findViewById(R.id.mobileTextView);
              TextView details = rootView.findViewById(R.id.detailsTextView);
+
 
             Glide.with(getActivity())
                     .asBitmap()
@@ -116,8 +119,14 @@ public class DetailsActivity extends AppCompatActivity {
                     .into(image);
             name.setText(this.name);
             price.setText("Price: "+this.price+" BDT");
-            number.setVisibility(View.GONE);
             details.setText(this.details);
+
+            number.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    CommonTask.showToast(getContext(), name.getText().toString());
+                }
+            });
 
             return rootView;
         }
