@@ -124,6 +124,10 @@ public class DetailsActivity extends AppCompatActivity {
              ImageButton number = rootView.findViewById(R.id.mobileTextView);
              TextView details = rootView.findViewById(R.id.detailsTextView);
 
+            if (Integer.parseInt(MainActivity.userInfo.getRememberToken())==0){
+                number.setVisibility(View.GONE);
+            }
+
             final DetailsViewModel   viewModel = ViewModelProviders.of(this).get(DetailsViewModel.class);
 
             Glide.with(getActivity())

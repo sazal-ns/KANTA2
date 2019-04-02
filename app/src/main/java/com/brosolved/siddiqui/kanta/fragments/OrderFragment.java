@@ -107,12 +107,19 @@ public class OrderFragment extends Fragment {
         adapter.setOnUpdateClickListener(new OrderProductAdapter.OnUpdateClick() {
             @Override
             public void onUpdateClick(View view, final int position) {
-                viewModel.updateStatus(msProducts.get(position).getId(), 2).observe(getViewLifecycleOwner(), new Observer<CartProduct>() {
+                int a=0;
+                if (Integer.parseInt(MainActivity.userInfo.getRememberToken())==1)
+                    a=2;
+                else
+                    a=1;
+
+                viewModel.updateStatus(msProducts.get(position).getId(), a).observe(getViewLifecycleOwner(), new Observer<CartProduct>() {
                     @Override
                     public void onChanged(CartProduct cartProduct) {
                         if (cartProduct != null) {
-                            CommonTask.dialogShow(getContext(), "Status Update DOne");
-                           //msProducts.remove(position);
+                            CommonTask.dialogShow(getContext(), "Status Update Done");
+                           msProducts.remove(position);
+                           adapter.notifyDataSetChanged();
                         }
                         else
                             CommonTask.showToast(getContext(), "Something is wrong");

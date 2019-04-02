@@ -80,13 +80,16 @@ public class MainActivity extends AppCompatActivity
                         contact.setText(userInfo.getMobile());
                         Log.d(TAG, "User ID & Name: "+userInfo.getId()+" "+userInfo.getName());
                     }
-                    menu.findItem(R.id.nav_add_product).setVisible(false);
-                    menu.findItem(R.id.nav_shop_product).setVisible(false);
+                    if (Integer.parseInt(userInfo.getRememberToken()) == 1) {
+                        menu.findItem(R.id.nav_add_product).setVisible(false);
+                        menu.findItem(R.id.nav_shop_product).setVisible(false);
+                    }else
+                        menu.findItem(R.id.nav_buy).setTitle("Sell List");
                     openFragment(new HomeFragment());
                 }
             });
         }else {
-            mainViewModel.addOrGet(getIntent().getStringExtra(_Constant.INTENT_PHONE_NUMBER), "1").observe(this, new Observer<MutableUser>() {
+            mainViewModel.addOrGet(getIntent().getStringExtra(_Constant.INTENT_PHONE_NUMBER), String.valueOf(getIntent().getIntExtra(_Constant.IS_BUYER, 1))).observe(this, new Observer<MutableUser>() {
                 @Override
                 public void onChanged(MutableUser user) {
                    if (user != null) {
@@ -140,11 +143,6 @@ public class MainActivity extends AppCompatActivity
             openFragment(new ShopProductFragment());
         else if (id == R.id.nav_youtube)
             openFragment(new YoutubeFragment());
-
-        if (userInfo.getRememberToken().equals(1)){
-
-
-        }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
