@@ -2,6 +2,7 @@ package com.brosolved.siddiqui.kanta.remote;
 
 import com.brosolved.siddiqui.kanta.models.CartProduct;
 import com.brosolved.siddiqui.kanta.models.Categories;
+import com.brosolved.siddiqui.kanta.models.MSProduct;
 import com.brosolved.siddiqui.kanta.models.MutableUser;
 import com.brosolved.siddiqui.kanta.models.Product;
 import com.brosolved.siddiqui.kanta.models.Products;
@@ -64,10 +65,13 @@ public interface API {
     Call<CartProduct> addToCart(@Field("user_id") int user_id, @Field("product_id") int product_id, @Field("quantity") int quantity);
 
     @GET("saveProduct/{id}")
-    Call<CartProduct> orderCondition(@Path("id") int id);
+    Call<List<MSProduct>> orderCondition(@Path("id") int id);
 
     @FormUrlEncoded
     @PUT("saveProduct")
     Call<CartProduct> updateStatus(@Field("id") int id, @Field("status") int status);
+
+    @GET("saveBuyer/{id}")
+    Call<CartProduct> orderBuyer(@Path("id") int id);
 
 }

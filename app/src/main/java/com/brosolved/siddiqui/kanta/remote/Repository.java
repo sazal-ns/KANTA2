@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.brosolved.siddiqui.kanta.models.CartProduct;
 import com.brosolved.siddiqui.kanta.models.Categories;
+import com.brosolved.siddiqui.kanta.models.MSProduct;
 import com.brosolved.siddiqui.kanta.models.MutableUser;
 import com.brosolved.siddiqui.kanta.models.Product;
 import com.brosolved.siddiqui.kanta.models.Products;
@@ -276,10 +277,33 @@ public class Repository {
         return data;
     }
 
-    public LiveData<CartProduct> orderStatus(int user_id){
-      final   MutableLiveData<CartProduct> data = new MutableLiveData<>();
+    public LiveData<List<MSProduct>> orderStatus(int user_id){
+      final   MutableLiveData<List<MSProduct>> data = new MutableLiveData<>();
 
-        api.orderCondition(user_id).enqueue(new Callback<CartProduct>() {
+        api.orderCondition(user_id).enqueue(new Callback<List<MSProduct>>() {
+            @Override
+            public void onResponse(Call<List<MSProduct>> call, Response<List<MSProduct>> response) {
+                if (response.isSuccessful() && response.code() == 200)
+                    data.setValue(response.body());
+                else
+                    data.setValue(null);
+            }
+
+            @Override
+            public void onFailure(Call<List<MSProduct>> call, Throwable t) {
+                data.setValue(null);
+
+                t.printStackTrace();
+            }
+        });
+
+        return data;
+    }
+
+    public LiveData<CartProduct> orderBuyer(int user_id){
+        final   MutableLiveData<CartProduct> data = new MutableLiveData<>();
+
+        api.orderBuyer(user_id).enqueue(new Callback<CartProduct>() {
             @Override
             public void onResponse(Call<CartProduct> call, Response<CartProduct> response) {
                 if (response.isSuccessful() && response.code() == 200)

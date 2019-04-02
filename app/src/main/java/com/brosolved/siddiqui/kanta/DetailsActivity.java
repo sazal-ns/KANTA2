@@ -172,7 +172,7 @@ public class DetailsActivity extends AppCompatActivity {
                                                 public void onChanged(CartProduct cartProduct) {
 
                                                     CommonTask.dialogDistroy();
-                                                    if (cartProduct.getError().isEmpty())
+                                                    if (cartProduct.getError() == null)
                                                         CommonTask.dialogShow(getContext(), "Thanks for shop with us");
                                                     else
                                                         CommonTask.dialogShow(getContext(),cartProduct.getError());

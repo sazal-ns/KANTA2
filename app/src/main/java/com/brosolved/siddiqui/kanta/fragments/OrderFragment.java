@@ -85,14 +85,29 @@ public class OrderFragment extends Fragment {
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
 
-        viewModel.orderStatus(MainActivity.userInfo.getId()).observe(getViewLifecycleOwner(), new Observer<CartProduct>() {
+        if (Integer.parseInt(MainActivity.userInfo.getRememberToken()) == 0)
+        viewModel.orderStatus(MainActivity.userInfo.getId()).observe(getViewLifecycleOwner(), new Observer<List<MSProduct>>() {
             @Override
-            public void onChanged(CartProduct cartProduct) {
+            public void onChanged(List<MSProduct> cartProduct) {
                 if (cartProduct != null)
                 {
                    // msProducts.addAll(cartProduct.getData());
                     Log.i(TAG, "onChanged: "+mParam1);
 
+                    msProducts.clear();
+                    for (MSProduct msproduct :
+                            cartProduct) {
+                        if (Integer.parseInt(msproduct.getStatus()) == mParam1)
+                            msProducts.add(msproduct);
+                    }
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
+        else
+            viewModel.orderBuyer(MainActivity.userInfo.getId()).observe(getViewLifecycleOwner(), new Observer<CartProduct>() {
+                @Override
+                public void onChanged(CartProduct cartProduct) {
                     msProducts.clear();
                     for (MSProduct msproduct :
                             cartProduct.getData()) {
@@ -101,8 +116,7 @@ public class OrderFragment extends Fragment {
                     }
                     adapter.notifyDataSetChanged();
                 }
-            }
-        });
+            });
 
         adapter.setOnUpdateClickListener(new OrderProductAdapter.OnUpdateClick() {
             @Override

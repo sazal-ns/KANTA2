@@ -65,8 +65,19 @@
                 android:layout_marginStart="8dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/productNameTextView"
+                app:layout_constraintEnd_toStartOf="@id/quantityTeviView"
+                app:layout_constraintBottom_toTopOf="@id/detailsTextView" />
+
+            <TextView
+                android:id="@+id/quantityTeviView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="100 remining"
+                android:layout_marginRight="8dp"
+                android:textColor="@android:color/white"
                 app:layout_constraintEnd_toStartOf="@id/mobileTextView"
-                app:layout_constraintBottom_toTopOf="@id/detailsTextView"/>
+                app:layout_constraintStart_toEndOf="@id/priceTextView"
+                app:layout_constraintTop_toBottomOf="@id/productNameTextView"/>
 
             <ImageButton
                 android:id="@+id/mobileTextView"
