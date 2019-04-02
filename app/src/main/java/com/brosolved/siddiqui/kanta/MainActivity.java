@@ -4,11 +4,13 @@ import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import com.brosolved.siddiqui.kanta.fragments.HomeFragment;
+import com.brosolved.siddiqui.kanta.fragments.OrderFragment;
 import com.brosolved.siddiqui.kanta.fragments.ProfileFragment;
 import com.brosolved.siddiqui.kanta.fragments.ShopProductFragment;
 import com.brosolved.siddiqui.kanta.fragments.YoutubeFragment;
@@ -62,6 +64,7 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        final Menu menu= navigationView.getMenu();
 
         View navHeader = navigationView.getHeaderView(0);
         name = navHeader.findViewById(R.id.name);
@@ -77,6 +80,8 @@ public class MainActivity extends AppCompatActivity
                         contact.setText(userInfo.getMobile());
                         Log.d(TAG, "User ID & Name: "+userInfo.getId()+" "+userInfo.getName());
                     }
+                    menu.findItem(R.id.nav_add_product).setVisible(false);
+                    menu.findItem(R.id.nav_shop_product).setVisible(false);
                     openFragment(new HomeFragment());
                 }
             });
@@ -90,10 +95,17 @@ public class MainActivity extends AppCompatActivity
                        contact.setText(userInfo.getMobile());
                        Log.d(TAG, "User ID & Name: "+userInfo.getId()+" "+userInfo.getName());
                    }
+
+
+
                     openFragment(new HomeFragment());
                 }
             });
         }
+
+
+
+
 
     }
 
@@ -115,11 +127,11 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_order) {
-            // Handle the camera action
+            openFragment(OrderFragment.newInstance(0));
         } else if (id == R.id.nav_processing) {
-
+            openFragment(OrderFragment.newInstance(1));
         } else if (id == R.id.nav_buy) {
-
+            openFragment(OrderFragment.newInstance(2));
         } else if (id == R.id.nav_profile) {
             openFragment(new ProfileFragment());
         }else if (id == R.id.nav_add_product)
@@ -128,6 +140,11 @@ public class MainActivity extends AppCompatActivity
             openFragment(new ShopProductFragment());
         else if (id == R.id.nav_youtube)
             openFragment(new YoutubeFragment());
+
+        if (userInfo.getRememberToken().equals(1)){
+
+
+        }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

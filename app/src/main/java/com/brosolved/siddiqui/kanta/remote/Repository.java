@@ -299,4 +299,29 @@ public class Repository {
         return data;
     }
 
+    public LiveData<CartProduct> updateStatus(int id, int status){
+        final MutableLiveData<CartProduct> data = new MutableLiveData<>();
+
+        api.updateStatus(id, status).enqueue(new Callback<CartProduct>() {
+            @Override
+            public void onResponse(Call<CartProduct> call, Response<CartProduct> response) {
+                if (response.isSuccessful() && response.code() == 200){
+                    data.setValue(response.body());
+
+                }else
+                    data.setValue(null);
+
+                Log.i(TAG, "onResponse: "+response);
+            }
+
+            @Override
+            public void onFailure(Call<CartProduct> call, Throwable t) {
+                data.setValue(null);
+                t.printStackTrace();
+            }
+        });
+
+        return data;
+    }
+
 }

@@ -17,4 +17,12 @@ public class DetailsViewModel extends ViewModel {
         return Repository.getInstance().addToCart(user_id, product_id, quintiy);
     }
 
+    public LiveData<CartProduct> orderStatus(int user_id){
+        return Repository.getInstance().orderStatus(user_id);
+    }
+
+    public LiveData<CartProduct> updateStatus(int order_id, int status){
+        return Repository.getInstance().updateStatus(order_id, status);
+    }
+
 }

@@ -7,6 +7,9 @@ import javax.annotation.Generated;
 @Generated("com.robohorse.robopojogenerator")
 public class MSProduct {
 
+	@SerializedName("id")
+	private int id;
+
 	@SerializedName("product")
 	private Product product;
 
@@ -27,6 +30,14 @@ public class MSProduct {
 
 	@SerializedName("status")
 	private String status;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public void setProduct(Product product){
 		this.product = product;

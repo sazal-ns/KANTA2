@@ -66,4 +66,8 @@ public interface API {
     @GET("saveProduct/{id}")
     Call<CartProduct> orderCondition(@Path("id") int id);
 
+    @FormUrlEncoded
+    @PUT("saveProduct")
+    Call<CartProduct> updateStatus(@Field("id") int id, @Field("status") int status);
+
 }
