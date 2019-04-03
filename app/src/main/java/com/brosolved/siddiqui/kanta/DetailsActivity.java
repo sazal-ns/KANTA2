@@ -89,7 +89,7 @@ public class DetailsActivity extends AppCompatActivity {
         public PlaceholderFragment() {
         }
 
-        static PlaceholderFragment newInstance(int sectionNumber, String imageUrl1, String name, String price, String details, int product_id) {
+        static PlaceholderFragment newInstance(int sectionNumber, String imageUrl1, String name, String price, String details, int product_id, int quantity) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
@@ -98,6 +98,7 @@ public class DetailsActivity extends AppCompatActivity {
             args.putString(_Constant.PRODUCT_PRICE, price);
             args.putString(_Constant.PRODUCT_DETAILS, details);
             args.putInt("Product_id", product_id);
+            args.putInt("qun", quantity);
             fragment.setArguments(args);
             return fragment;
         }
@@ -111,6 +112,7 @@ public class DetailsActivity extends AppCompatActivity {
             this.details = args.getString(_Constant.PRODUCT_DETAILS);
             this.pos = args.getInt(ARG_SECTION_NUMBER);
             this.product_id = args.getInt("Product_id");
+            this.quantity = args.getInt("qun");
         }
 
         @Override
@@ -123,6 +125,7 @@ public class DetailsActivity extends AppCompatActivity {
              TextView price = rootView.findViewById(R.id.priceTextView);
              ImageButton number = rootView.findViewById(R.id.mobileTextView);
              TextView details = rootView.findViewById(R.id.detailsTextView);
+             TextView rem = rootView.findViewById(R.id.quantityTeviView);
 
             if (Integer.parseInt(MainActivity.userInfo.getRememberToken())==0){
                 number.setVisibility(View.GONE);
@@ -138,6 +141,15 @@ public class DetailsActivity extends AppCompatActivity {
             name.setText(this.name);
             price.setText("Price: "+this.price+" BDT");
             details.setText(this.details);
+
+            if (quantity == 0) {
+                rem.setText("Out of Stock");
+                number.setVisibility(View.GONE);
+            }
+            else {
+                number.setVisibility(View.VISIBLE);
+                rem.setText(quantity + " remaining");
+            }
 
             number.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -213,7 +225,7 @@ public class DetailsActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            return PlaceholderFragment.newInstance(position, products.get(position).getImageUrl1(), products.get(position).getName(), products.get(position).getPrice(), products.get(position).getDetails(), products.get(position).getId());
+            return PlaceholderFragment.newInstance(position, products.get(position).getImageUrl1(), products.get(position).getName(), products.get(position).getPrice(), products.get(position).getDetails(), products.get(position).getId(), products.get(position).getQuantity());
         }
 
         @Override

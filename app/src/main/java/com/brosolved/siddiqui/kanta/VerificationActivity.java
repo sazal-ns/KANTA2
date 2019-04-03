@@ -41,8 +41,18 @@ public class VerificationActivity extends AppCompatActivity {
 
         progressBar = findViewById(R.id.progressbar);
         editText = findViewById(R.id.editTextCode);
+        button = findViewById(R.id.buttonAccess);
 
         sendVerificationCode(getIntent().getStringExtra(_Constant.INTENT_PHONE_NUMBER));
+
+        button.setClickable(false);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                verifyCode(editText.getText().toString().trim());
+            }
+        });
 
     }
 
@@ -63,6 +73,12 @@ public class VerificationActivity extends AppCompatActivity {
                 if (phoneAuthCredential.getSmsCode() != null){
                     editText.setText(phoneAuthCredential.getSmsCode());
                     verifyCode(phoneAuthCredential.getSmsCode());
+                }else
+                {
+                    progressBar.setVisibility(View.GONE);
+                    button.setClickable(true);
+                    signInWithCredential(phoneAuthCredential);
+
                 }
                 Log.i("BOO", "onVerificationCompleted: "+phoneAuthCredential.getSignInMethod()+" "+phoneAuthCredential.getProvider()+" "+phoneAuthCredential.getSmsCode());
             }
@@ -91,7 +107,7 @@ public class VerificationActivity extends AppCompatActivity {
         mAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                Log.i("BOO", "onComplete: "+task);
+                Log.i("BOO", "onComplete: "+task.getResult());
                 if (task.isSuccessful()){
                     Intent intent = new Intent(VerificationActivity.this, MainActivity.class);
                     intent.putExtra(_Constant.INTENT_PHONE_NUMBER, task.getResult().getUser().getPhoneNumber());

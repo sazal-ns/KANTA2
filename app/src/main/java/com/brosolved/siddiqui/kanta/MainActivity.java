@@ -21,6 +21,7 @@ import com.brosolved.siddiqui.kanta.utils.RuntimePermissionHandler;
 import com.brosolved.siddiqui.kanta.utils._Constant;
 import com.brosolved.siddiqui.kanta.viewModel.MainViewModel;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -99,7 +100,11 @@ public class MainActivity extends AppCompatActivity
                        Log.d(TAG, "User ID & Name: "+userInfo.getId()+" "+userInfo.getName());
                    }
 
-
+                    if (Integer.parseInt(userInfo.getRememberToken()) == 1) {
+                        menu.findItem(R.id.nav_add_product).setVisible(false);
+                        menu.findItem(R.id.nav_shop_product).setVisible(false);
+                    }else
+                        menu.findItem(R.id.nav_buy).setTitle("Sell List");
 
                     openFragment(new HomeFragment());
                 }
@@ -143,6 +148,10 @@ public class MainActivity extends AppCompatActivity
             openFragment(new ShopProductFragment());
         else if (id == R.id.nav_youtube)
             openFragment(new YoutubeFragment());
+        else if (id == R.id.nav_logout) {
+            FirebaseAuth.getInstance().signOut();
+            finish();
+        }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

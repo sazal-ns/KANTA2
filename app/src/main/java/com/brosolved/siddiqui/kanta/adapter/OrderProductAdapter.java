@@ -56,9 +56,11 @@ public class OrderProductAdapter extends RecyclerView.Adapter<OrderProductAdapte
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .into(holder.imageView);
 
+        int total = Integer.parseInt(products.get(position).getQuantity() ) * Integer.parseInt(products.get(position).getProduct().getPrice());
         holder.name.setText(products.get(position).getProduct().getName());
         holder.price.setText(products.get(position).getProduct().getPrice()+" BDT");
-        holder.quaintly.setText(" x "+ String.valueOf(products.get(position).getQuantity()));
+        holder.quaintly.setText(" x "+ String.valueOf(products.get(position).getQuantity())+" Total: "+total);
+        holder.orderDate.setText("Order Date: "+ products.get(position).getCreatedAt());
 
         if (products.get(position).getStatus().equals("0") && MainActivity.userInfo.getRememberToken().equals("1"))
             holder.update.setVisibility(GONE);
@@ -81,7 +83,7 @@ public class OrderProductAdapter extends RecyclerView.Adapter<OrderProductAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
-        TextView name, price, quaintly;
+        TextView name, price, quaintly, orderDate;
         Button update;
 
         public ViewHolder(@NonNull View itemView) {
@@ -91,6 +93,7 @@ public class OrderProductAdapter extends RecyclerView.Adapter<OrderProductAdapte
             price = itemView.findViewById(R.id.price);
             quaintly = itemView.findViewById(R.id.quantity);
             update = itemView.findViewById(R.id.theButton);
+            orderDate = itemView.findViewById(R.id.orderDate);
 
             update.setOnClickListener(new View.OnClickListener() {
                 @Override
