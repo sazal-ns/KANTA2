@@ -23,7 +23,7 @@ public class UserInfo {
 	private String  createdAt;
 
 	@SerializedName("email_verified_at")
-	private String notiToken;
+	private String notiToken = "FOO";
 
 	@SerializedName("id")
 	private int id;

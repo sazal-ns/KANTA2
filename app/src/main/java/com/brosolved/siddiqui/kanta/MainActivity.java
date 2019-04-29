@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -64,7 +63,7 @@ public class MainActivity extends AppCompatActivity
     private TextView name, contact;
 
     private RuntimePermissionHandler handler;
-    String token;
+    String token = "BOO";
 
     private BroadcastReceiver mRegistrationBroadcastReceiver;
 
@@ -107,7 +106,7 @@ public class MainActivity extends AppCompatActivity
                     // now subscribe to `global` topic to receive app wide notifications
                     FirebaseMessaging.getInstance().subscribeToTopic(Config.TOPIC_GLOBAL);
 
-                    displayFirebaseRegId();
+                   // displayFirebaseRegId();
 
                 } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
                     // new push notification is received
@@ -122,7 +121,7 @@ public class MainActivity extends AppCompatActivity
             }
         };
 
-        displayFirebaseRegId();
+        //displayFirebaseRegId();
 
 
         MainViewModel mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
@@ -149,6 +148,7 @@ public class MainActivity extends AppCompatActivity
                         userInfo = user.getData().get(0);
                         name.setText(userInfo.getName());
                         contact.setText(userInfo.getMobile());
+                        displayFirebaseRegId();
                         Log.d(TAG, "User ID & Name: "+userInfo.getNotiToken()+" "+userInfo.getName());
                     }
                     if (Integer.parseInt(userInfo.getRememberToken()) == 1) {
@@ -167,6 +167,7 @@ public class MainActivity extends AppCompatActivity
                        userInfo = user.getData();
                        name.setText(userInfo.getName());
                        contact.setText(userInfo.getMobile());
+                       displayFirebaseRegId();
                        Log.d(TAG, "User ID & Name: "+userInfo.getNotiToken()+" "+userInfo.getName());
                    }
 
@@ -180,6 +181,12 @@ public class MainActivity extends AppCompatActivity
                 }
             });
         }
+
+
+    }
+
+
+    private void displayFirebaseRegId() {
 
         if (!token.equals(userInfo.getNotiToken())){
             API api = TheGateway.path();
@@ -195,15 +202,6 @@ public class MainActivity extends AppCompatActivity
                 }
             });
         }
-
-    }
-
-
-    private void displayFirebaseRegId() {
-        SharedPreferences pref = getApplicationContext().getSharedPreferences(Config.SHARED_PREF, 0);
-        String regId = pref.getString("regId", null);
-
-        Log.e(TAG, "Firebase reg id: " + regId);
 
     }
 
