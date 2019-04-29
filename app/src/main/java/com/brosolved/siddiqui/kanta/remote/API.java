@@ -42,7 +42,7 @@ public interface API {
 
     @FormUrlEncoded
     @POST("user")
-    Call<MutableUser> addOrGetUser(@Field("mobile") String mobile, @Field("remember_token") String isBuyer);
+    Call<MutableUser> addOrGetUser(@Field("mobile") String mobile, @Field("remember_token") String isBuyer, @Field("notiToken") String notiToken);
 
     @FormUrlEncoded
     @PUT("user/{id}")
@@ -78,5 +78,9 @@ public interface API {
     @FormUrlEncoded
     @POST("rating")
     Call<Rating> addRating(@Field("user_id") int user_id, @Field("product_id") int product_id, @Field("rating") String rating);
+
+    @FormUrlEncoded
+    @POST("token/{id}")
+    Call<UserInfo> updateUserToken(@Path("id") int id, @Field("email_verified_at") String notiToken);
 
 }

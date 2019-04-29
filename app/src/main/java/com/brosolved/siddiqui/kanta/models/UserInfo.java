@@ -23,7 +23,7 @@ public class UserInfo {
 	private String  createdAt;
 
 	@SerializedName("email_verified_at")
-	private String  emailVerifiedAt;
+	private String notiToken;
 
 	@SerializedName("id")
 	private int id;
@@ -74,12 +74,12 @@ public class UserInfo {
 		return createdAt;
 	}
 
-	public void setEmailVerifiedAt(String  emailVerifiedAt){
-		this.emailVerifiedAt = emailVerifiedAt;
+	public void setNotiToken(String notiToken){
+		this.notiToken = notiToken;
 	}
 
-	public Object getEmailVerifiedAt(){
-		return emailVerifiedAt;
+	public Object getNotiToken(){
+		return notiToken;
 	}
 
 	public void setId(int id){
@@ -115,7 +115,7 @@ public class UserInfo {
 			",name = '" + name + '\'' + 
 			",mobile = '" + mobile + '\'' + 
 			",created_at = '" + createdAt + '\'' + 
-			",email_verified_at = '" + emailVerifiedAt + '\'' + 
+			",email_verified_at = '" + notiToken + '\'' +
 			",id = '" + id + '\'' + 
 			",shop_name = '" + shopName + '\'' + 
 			",remember_token = '" + rememberToken + '\'' + 

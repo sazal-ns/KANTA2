@@ -6,13 +6,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatEditText;
+
 import com.brosolved.siddiqui.kanta.utils.CommonTask;
 import com.brosolved.siddiqui.kanta.utils._Constant;
 import com.google.firebase.auth.FirebaseAuth;
 import com.rilixtech.CountryCodePicker;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatEditText;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -20,7 +20,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private CountryCodePicker countryCodePicker;
     private AppCompatEditText appCompatEditText;
-
 
 
     @Override
@@ -81,4 +80,5 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
         }
     }
+
 }

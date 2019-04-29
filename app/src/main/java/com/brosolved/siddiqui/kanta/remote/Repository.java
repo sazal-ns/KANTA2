@@ -2,6 +2,9 @@ package com.brosolved.siddiqui.kanta.remote;
 
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import com.brosolved.siddiqui.kanta.models.CartProduct;
 import com.brosolved.siddiqui.kanta.models.Categories;
 import com.brosolved.siddiqui.kanta.models.MSProduct;
@@ -14,8 +17,6 @@ import com.brosolved.siddiqui.kanta.models.UserInfo;
 
 import java.util.List;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -63,10 +64,10 @@ public class Repository {
         return liveData;
     }
 
-    public LiveData<MutableUser> addOrGet(String mobile, String isBuyer) {
+    public LiveData<MutableUser> addOrGet(String mobile, String isBuyer, String notiTOken) {
         final MutableLiveData<MutableUser> liveData = new MutableLiveData<>();
 
-        api.addOrGetUser(mobile, isBuyer).enqueue(new Callback<MutableUser>() {
+        api.addOrGetUser(mobile, isBuyer, notiTOken).enqueue(new Callback<MutableUser>() {
             @Override
             public void onResponse(Call<MutableUser> call, Response<MutableUser> response) {
                 if (response.isSuccessful()) {
