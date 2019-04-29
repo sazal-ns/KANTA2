@@ -50,6 +50,9 @@ public class Product implements Parcelable {
 	@SerializedName("quantity")
 	private int quantity;
 
+	@SerializedName("average_rating")
+	private int rating;
+
 	public Product() {
 	}
 
@@ -66,6 +69,19 @@ public class Product implements Parcelable {
 		imageUrl3 = source.readString();
 		productCategoryId = source.readString();
 		quantity = source.readInt();
+		rating = source.readInt();
+	}
+
+
+	public int getRating() {
+		return rating;
+	}
+
+	public void setRating(String  rating) {
+		if (rating.contains("null"))
+		this.rating = 0;
+		else
+			this.rating = Integer.parseInt(rating);
 	}
 
 	public int getQuantity() {
@@ -221,5 +237,6 @@ public class Product implements Parcelable {
 		dest.writeString(imageUrl3);
 		dest.writeString(productCategoryId);
 		dest.writeInt(quantity);
+		dest.writeInt(rating);
 	}
 }

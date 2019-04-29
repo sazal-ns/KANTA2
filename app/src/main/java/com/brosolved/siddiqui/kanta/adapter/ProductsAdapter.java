@@ -5,7 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.brosolved.siddiqui.kanta.R;
 import com.brosolved.siddiqui.kanta.models.Product;
@@ -13,9 +17,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 /*
  * com.brosolved.siddiqui.kanta.adapter is created by Noor Nabiul Alam Siddiqui on 2/18/2019
@@ -54,6 +55,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
         }
         holder.name.setText(products.get(position).getName());
         holder.price.setText(products.get(position).getPrice()+" BDT");
+        holder.ratingBar.setRating(products.get(position).getRating());
 
     }
 
@@ -65,12 +67,14 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView productImage;
         TextView name, price;
+        RatingBar ratingBar;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             productImage = itemView.findViewById(R.id.productImage);
             name = itemView.findViewById(R.id.productName);
             price = itemView.findViewById(R.id.productPrice);
+            ratingBar = itemView.findViewById(R.id.ratingBar);
             productImage.setOnClickListener(this);
         }
 

@@ -6,6 +6,7 @@ import com.brosolved.siddiqui.kanta.models.MSProduct;
 import com.brosolved.siddiqui.kanta.models.MutableUser;
 import com.brosolved.siddiqui.kanta.models.Product;
 import com.brosolved.siddiqui.kanta.models.Products;
+import com.brosolved.siddiqui.kanta.models.Rating;
 import com.brosolved.siddiqui.kanta.models.Status;
 import com.brosolved.siddiqui.kanta.models.User;
 import com.brosolved.siddiqui.kanta.models.UserInfo;
@@ -73,5 +74,9 @@ public interface API {
 
     @GET("saveBuyer/{id}")
     Call<CartProduct> orderBuyer(@Path("id") int id);
+
+    @FormUrlEncoded
+    @POST("rating")
+    Call<Rating> addRating(@Field("user_id") int user_id, @Field("product_id") int product_id, @Field("rating") String rating);
 
 }

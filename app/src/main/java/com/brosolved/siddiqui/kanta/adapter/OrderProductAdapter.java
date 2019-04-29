@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -34,6 +35,7 @@ public class OrderProductAdapter extends RecyclerView.Adapter<OrderProductAdapte
     private List<MSProduct> products;
 
     private OnUpdateClick onUpdateClick;
+    private OnRatingChange onRatingChange;
 
     public OrderProductAdapter(Context context, List<MSProduct> products) {
         this.context = context;
@@ -62,11 +64,15 @@ public class OrderProductAdapter extends RecyclerView.Adapter<OrderProductAdapte
         holder.quaintly.setText(" x "+ String.valueOf(products.get(position).getQuantity())+" Total: "+total);
         holder.orderDate.setText("Order Date & Time: "+ products.get(position).getCreatedAt());
 
-        holder.buyerContact.setText(products.get(position).getUserInfo().getMobile());
-        holder.buyerName.setText(products.get(position).getUserInfo().getName());
+        if (MainActivity.userInfo.getRememberToken().equals("0")){
+
+            holder.buyerContact.setText(products.get(position).getUserInfo().getMobile());
+            holder.buyerName.setText(products.get(position).getUserInfo().getName());
+        }
 
         holder.buyerContact.setVisibility(GONE);
         holder.buyerName.setVisibility(GONE);
+        holder.ratingBar.setVisibility(GONE);
 
         if (products.get(position).getStatus().equals("0") && MainActivity.userInfo.getRememberToken().equals("1")) {
             holder.update.setVisibility(GONE);
@@ -85,8 +91,15 @@ public class OrderProductAdapter extends RecyclerView.Adapter<OrderProductAdapte
             holder.buyerName.setVisibility(View.VISIBLE);
             holder.buyerContact.setVisibility(View.VISIBLE);
         }
+        else if (products.get(position).getStatus().equals("2") && MainActivity.userInfo.getRememberToken().equals("1")){
+
+            holder.update.setVisibility(GONE);
+            holder.ratingBar.setVisibility(View.VISIBLE);
+        }
         else {
             holder.update.setVisibility(GONE);
+            holder.buyerName.setVisibility(View.VISIBLE);
+            holder.buyerContact.setVisibility(View.VISIBLE);
         }
 
 
@@ -101,6 +114,7 @@ public class OrderProductAdapter extends RecyclerView.Adapter<OrderProductAdapte
         ImageView imageView;
         TextView name, price, quaintly, orderDate, buyerName, buyerContact;
         Button update;
+        RatingBar ratingBar;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -112,11 +126,20 @@ public class OrderProductAdapter extends RecyclerView.Adapter<OrderProductAdapte
             orderDate = itemView.findViewById(R.id.orderDate);
             buyerName = itemView.findViewById(R.id.buyerName);
             buyerContact = itemView.findViewById(R.id.buyerContact);
+            ratingBar = itemView.findViewById(R.id.ratingBar);
 
             update.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onUpdateClick.onUpdateClick(v, getAdapterPosition());
+                }
+            });
+
+            ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+                @Override
+                public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                    onRatingChange.OnRatingChange(ratingBar, rating, getAdapterPosition());
+                    ratingBar.setRating(rating);
                 }
             });
         }
@@ -128,8 +151,16 @@ public class OrderProductAdapter extends RecyclerView.Adapter<OrderProductAdapte
 
     }
 
+    public void  setOnRatingChange(OnRatingChange onRatingChange){
+        this.onRatingChange = onRatingChange;
+    }
+
     public interface OnUpdateClick {
         void onUpdateClick(View view, int position);
+    }
+
+    public interface  OnRatingChange{
+        void  OnRatingChange(RatingBar ratingBar, float rating, int position);
     }
 
 }

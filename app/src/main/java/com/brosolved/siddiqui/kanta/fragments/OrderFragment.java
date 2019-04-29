@@ -1,31 +1,41 @@
 package com.brosolved.siddiqui.kanta.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.brosolved.siddiqui.kanta.MainActivity;
 import com.brosolved.siddiqui.kanta.R;
 import com.brosolved.siddiqui.kanta.adapter.OrderProductAdapter;
 import com.brosolved.siddiqui.kanta.models.CartProduct;
 import com.brosolved.siddiqui.kanta.models.MSProduct;
+import com.brosolved.siddiqui.kanta.models.Rating;
+import com.brosolved.siddiqui.kanta.remote.API;
+import com.brosolved.siddiqui.kanta.remote.TheGateway;
 import com.brosolved.siddiqui.kanta.utils.CommonTask;
 import com.brosolved.siddiqui.kanta.viewModel.DetailsViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class OrderFragment extends Fragment {
@@ -140,6 +150,37 @@ public class OrderFragment extends Fragment {
 
                     }
                 });
+            }
+        });
+
+        adapter.setOnRatingChange(new OrderProductAdapter.OnRatingChange() {
+            @Override
+            public void OnRatingChange(RatingBar ratingBar, final float rating, final int position) {
+                new AlertDialog.Builder(getContext())
+                        .setMessage("Do you really want to give "+ rating+ " star?")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                API api = TheGateway.path();
+
+                                api.addRating(MainActivity.userInfo.getId(), msProducts.get(position).getId(), String.valueOf(rating)).enqueue(new Callback<Rating>() {
+                                    @Override
+                                    public void onResponse(Call<Rating> call, Response<Rating> response) {
+                                        CommonTask.dialogShow(getContext(), "Rating Added Done");
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<Rating> call, Throwable t) {
+                                        t.printStackTrace();
+                                        CommonTask.showToast(getContext(), "Something is wrong");
+                                    }
+                                });
+
+                            }})
+                        .setNegativeButton("No", null)
+                        .show();
+
             }
         });
 
