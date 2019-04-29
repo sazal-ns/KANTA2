@@ -13,6 +13,9 @@ public class MSProduct {
 	@SerializedName("product")
 	private Product product;
 
+	@SerializedName("user")
+	private UserInfo userInfo;
+
 	@SerializedName("quantity")
 	private String quantity;
 
@@ -33,6 +36,14 @@ public class MSProduct {
 
 	public int getId() {
 		return id;
+	}
+
+	public UserInfo getUserInfo() {
+		return userInfo;
+	}
+
+	public void setUserInfo(UserInfo userInfo) {
+		this.userInfo = userInfo;
 	}
 
 	public void setId(int id) {

@@ -12,8 +12,7 @@
         android:src="@mipmap/ic_launcher"
         android:scaleType="fitXY"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/name"
@@ -59,6 +58,30 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
+    <TextView
+        android:id="@+id/buyerName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Buyer Name"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="4dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/orderDate"
+        app:layout_constraintEnd_toStartOf="@id/buyerContact"/>
+
+    <TextView
+        android:id="@+id/buyerContact"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Buyer Contact"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/orderDate"
+        app:layout_constraintStart_toEndOf="@id/buyerName"/>
+
     <Button
         android:id="@+id/theButton"
         android:layout_width="wrap_content"
@@ -66,6 +89,6 @@
         android:text="@string/app_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toTopOf="@id/orderDate"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

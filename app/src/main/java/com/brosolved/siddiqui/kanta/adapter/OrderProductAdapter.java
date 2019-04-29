@@ -8,6 +8,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.brosolved.siddiqui.kanta.MainActivity;
 import com.brosolved.siddiqui.kanta.R;
 import com.brosolved.siddiqui.kanta.models.MSProduct;
@@ -15,9 +18,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import static android.view.View.GONE;
 
@@ -60,18 +60,34 @@ public class OrderProductAdapter extends RecyclerView.Adapter<OrderProductAdapte
         holder.name.setText(products.get(position).getProduct().getName());
         holder.price.setText(products.get(position).getProduct().getPrice()+" BDT");
         holder.quaintly.setText(" x "+ String.valueOf(products.get(position).getQuantity())+" Total: "+total);
-        holder.orderDate.setText("Order Date: "+ products.get(position).getCreatedAt());
+        holder.orderDate.setText("Order Date & Time: "+ products.get(position).getCreatedAt());
 
-        if (products.get(position).getStatus().equals("0") && MainActivity.userInfo.getRememberToken().equals("1"))
+        holder.buyerContact.setText(products.get(position).getUserInfo().getMobile());
+        holder.buyerName.setText(products.get(position).getUserInfo().getName());
+
+        holder.buyerContact.setVisibility(GONE);
+        holder.buyerName.setVisibility(GONE);
+
+        if (products.get(position).getStatus().equals("0") && MainActivity.userInfo.getRememberToken().equals("1")) {
             holder.update.setVisibility(GONE);
-        else if (products.get(position).getStatus().equals("0") && MainActivity.userInfo.getRememberToken().equals("0"))
+        }
+        else if (products.get(position).getStatus().equals("0") && MainActivity.userInfo.getRememberToken().equals("0")) {
             holder.update.setText("Accept");
-        else if (products.get(position).getStatus().equals("1") && MainActivity.userInfo.getRememberToken().equals("1"))
+            holder.buyerName.setVisibility(View.VISIBLE);
+            holder.buyerContact.setVisibility(View.VISIBLE);
+        }
+        else if (products.get(position).getStatus().equals("1") && MainActivity.userInfo.getRememberToken().equals("1")) {
             holder.update.setText("Receive");
-        else if (products.get(position).getStatus().equals("1") && MainActivity.userInfo.getRememberToken().equals("0"))
+        }
+        else if (products.get(position).getStatus().equals("1") && MainActivity.userInfo.getRememberToken().equals("0")) {
             holder.update.setVisibility(GONE);
-        else
+
+            holder.buyerName.setVisibility(View.VISIBLE);
+            holder.buyerContact.setVisibility(View.VISIBLE);
+        }
+        else {
             holder.update.setVisibility(GONE);
+        }
 
 
     }
@@ -83,7 +99,7 @@ public class OrderProductAdapter extends RecyclerView.Adapter<OrderProductAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
-        TextView name, price, quaintly, orderDate;
+        TextView name, price, quaintly, orderDate, buyerName, buyerContact;
         Button update;
 
         public ViewHolder(@NonNull View itemView) {
@@ -94,6 +110,8 @@ public class OrderProductAdapter extends RecyclerView.Adapter<OrderProductAdapte
             quaintly = itemView.findViewById(R.id.quantity);
             update = itemView.findViewById(R.id.theButton);
             orderDate = itemView.findViewById(R.id.orderDate);
+            buyerName = itemView.findViewById(R.id.buyerName);
+            buyerContact = itemView.findViewById(R.id.buyerContact);
 
             update.setOnClickListener(new View.OnClickListener() {
                 @Override
