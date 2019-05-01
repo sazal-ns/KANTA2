@@ -151,13 +151,16 @@ public class MainActivity extends AppCompatActivity
                         contact.setText(userInfo.getMobile());
                         displayFirebaseRegId();
                         Log.d(TAG, "User ID & Name: "+userInfo.getNotiToken()+" "+userInfo.getName());
+                        if (Integer.parseInt(userInfo.getRememberToken()) == 1) {
+                            menu.findItem(R.id.nav_add_product).setVisible(false);
+                            menu.findItem(R.id.nav_shop_product).setVisible(false);
+                        }else
+                            menu.findItem(R.id.nav_buy).setTitle("Sell List");
+                        displayFirebaseRegId();
                     }
-                    if (Integer.parseInt(userInfo.getRememberToken()) == 1) {
-                        menu.findItem(R.id.nav_add_product).setVisible(false);
-                        menu.findItem(R.id.nav_shop_product).setVisible(false);
-                    }else
-                        menu.findItem(R.id.nav_buy).setTitle("Sell List");
+
                     openFragment(new HomeFragment());
+
                 }
             });
         }else {
@@ -170,16 +173,19 @@ public class MainActivity extends AppCompatActivity
                        contact.setText(userInfo.getMobile());
                        displayFirebaseRegId();
                        Log.d(TAG, "User ID & Name: "+userInfo.getNotiToken()+" "+userInfo.getName());
+                       if (Integer.parseInt(userInfo.getRememberToken()) == 1) {
+                           menu.findItem(R.id.nav_add_product).setVisible(false);
+                           menu.findItem(R.id.nav_shop_product).setVisible(false);
+                           menu.findItem(R.id.nav_account).setVisible(false);
+                       }else
+                           menu.findItem(R.id.nav_buy).setTitle("Sell List");
+                       displayFirebaseRegId();
                    }
 
-                    if (Integer.parseInt(userInfo.getRememberToken()) == 1) {
-                        menu.findItem(R.id.nav_add_product).setVisible(false);
-                        menu.findItem(R.id.nav_shop_product).setVisible(false);
-                        menu.findItem(R.id.nav_account).setVisible(false);
-                    }else
-                        menu.findItem(R.id.nav_buy).setTitle("Sell List");
+
 
                     openFragment(new HomeFragment());
+
                 }
             });
         }
@@ -191,11 +197,13 @@ public class MainActivity extends AppCompatActivity
     private void displayFirebaseRegId() {
 
         if (!token.equals(userInfo.getNotiToken())){
+            Log.d(TAG, "displayFirebaseRegId: "+"token");
             API api = TheGateway.path();
             api.updateUserToken(userInfo.getId(), token).enqueue(new Callback<UserInfo>() {
                 @Override
                 public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
-                    userInfo = response.body();
+                    //userInfo.setNotiToken(response.body().getNotiToken());
+                    Log.d(TAG, "onResponse: "+response);
                 }
 
                 @Override

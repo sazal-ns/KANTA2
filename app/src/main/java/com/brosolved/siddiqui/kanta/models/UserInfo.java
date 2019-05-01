@@ -78,7 +78,7 @@ public class UserInfo {
 		this.notiToken = notiToken;
 	}
 
-	public Object getNotiToken(){
+	public String getNotiToken(){
 		return notiToken;
 	}
 

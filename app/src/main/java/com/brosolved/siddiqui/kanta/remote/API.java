@@ -80,7 +80,7 @@ public interface API {
     Call<Rating> addRating(@Field("user_id") int user_id, @Field("product_id") int product_id, @Field("rating") String rating);
 
     @FormUrlEncoded
-    @POST("token/{id}")
+    @PUT("token/{id}")
     Call<UserInfo> updateUserToken(@Path("id") int id, @Field("email_verified_at") String notiToken);
 
 }
