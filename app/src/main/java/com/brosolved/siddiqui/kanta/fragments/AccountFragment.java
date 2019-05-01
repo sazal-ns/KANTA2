@@ -116,6 +116,7 @@ public class AccountFragment extends Fragment {
     }
 
     private void loadData() {
+        accounts.clear();
         for (int i =0; i< product.length; i++){
             Account account = new Account();
             if (product[i] > 0){
