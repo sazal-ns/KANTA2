@@ -27,6 +27,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.brosolved.siddiqui.kanta.app.Config;
+import com.brosolved.siddiqui.kanta.fragments.AccountFragment;
 import com.brosolved.siddiqui.kanta.fragments.HomeFragment;
 import com.brosolved.siddiqui.kanta.fragments.OrderFragment;
 import com.brosolved.siddiqui.kanta.fragments.ProfileFragment;
@@ -174,6 +175,7 @@ public class MainActivity extends AppCompatActivity
                     if (Integer.parseInt(userInfo.getRememberToken()) == 1) {
                         menu.findItem(R.id.nav_add_product).setVisible(false);
                         menu.findItem(R.id.nav_shop_product).setVisible(false);
+                        menu.findItem(R.id.nav_account).setVisible(false);
                     }else
                         menu.findItem(R.id.nav_buy).setTitle("Sell List");
 
@@ -240,6 +242,8 @@ public class MainActivity extends AppCompatActivity
             FirebaseAuth.getInstance().signOut();
             finish();
         }
+        else if (id == R.id.nav_account)
+            openFragment(new AccountFragment());
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
